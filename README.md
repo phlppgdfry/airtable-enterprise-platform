@@ -10,7 +10,7 @@
 
 **Production-grade Enterprise Architecture, Custom Extensions SDK, Metadata API DDL Migrations, Real-Time Webhook CDC Engine, and Model Context Protocol (MCP) Integration for Airtable.**
 
-[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Architecture](docs/ARCHITECTURE.md) • [14-Day Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Formula Masterclass](docs/FORMULAS_MASTERCLASS.md) • [Webhooks & CDC](docs/WEBHOOKS_CDC_GUIDE.md)
+[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Architecture](docs/ARCHITECTURE.md) • [14-Day Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Interface Designer Spec](docs/INTERFACES_SPEC.md) • [Formula Masterclass](docs/FORMULAS_MASTERCLASS.md) • [Webhooks & CDC](docs/WEBHOOKS_CDC_GUIDE.md)
 
 </div>
 
@@ -151,22 +151,36 @@ AIRTABLE_BASE_ID=appYourBaseIdHere
 AIRTABLE_WORKSPACE_ID=wsp3p16CPCotJVZdX
 ```
 
-### 4. Run the CLI Suite
+### 4. Provision Base Directly into Workspace (POST /v0/meta/bases)
 ```bash
-# Display CLI help
-npm run cli -- --help
+# 1-Click automatic provisioning into workspace wsp3p16CPCotJVZdX:
+npm run provision -- --token <YOUR_AIRTABLE_PAT>
 
-# Audit base health & conventions
+# Or explore the formula library:
+npm run formula
+
+# Audit base health & conventions:
 npm run audit
 
-# Introspect schema and export TypeScript definitions
+# Introspect schema and export TypeScript definitions:
 npm run schema:export
 
-# Provision schema and seed enterprise data (supports --dry-run)
+# Provision schema and seed enterprise data (supports --dry-run):
 npm run seed -- --dry-run
 ```
 
-### 5. Launch the Custom Extension locally
+### 5. Alternative: Instant CSV Import (No Token Required!)
+If you prefer immediate visibility in your browser without generating a token:
+1. Open [`https://airtable.com/workspaces/wsp3p16CPCotJVZdX`](https://airtable.com/workspaces/wsp3p16CPCotJVZdX)
+2. Click **Create base** -> **Import data** -> **CSV file**
+3. Drag & drop the pre-formatted files located in [`data/csv/`](data/csv/):
+   - `01_Projects.csv`
+   - `02_Team_Members.csv`
+   - `03_Tasks_Deliverables.csv`
+   - `04_Risk_Governance_Log.csv`
+   - `05_Audit_Trail_CDC_Logs.csv`
+
+### 6. Launch the Custom Extension locally
 ```bash
 cd extensions/enterprise-resource-matrix
 block run

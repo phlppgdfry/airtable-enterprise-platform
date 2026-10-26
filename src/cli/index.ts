@@ -12,10 +12,12 @@
 
 import { Command } from 'commander';
 import dotenv from 'dotenv';
+import { runProvisionCommand } from './commands/provision.js';
 import { runSeedCommand } from './commands/seed.js';
 import { runSchemaExportCommand } from './commands/schemaExport.js';
 import { runAuditCommand } from './commands/audit.js';
 import { runWebhookManageCommand } from './commands/webhookManage.js';
+import { runFormulaCommand } from './commands/formulaPlayground.js';
 
 dotenv.config();
 
@@ -25,6 +27,21 @@ program
   .name('airtable-toolkit')
   .description('Airtable Enterprise Engineering CLI — Extensions, Metadata API, Webhooks & Migrations')
   .version('1.0.0');
+
+program
+  .command('provision')
+  .description('Automatically create and seed the complete base in your workspace (POST /v0/meta/bases)')
+  .option('-t, --token <token>', 'Airtable Personal Access Token (PAT)')
+  .option('-w, --workspace-id <workspaceId>', 'Target Workspace ID', 'wsp3p16CPCotJVZdX')
+  .option('-n, --base-name <baseName>', 'Base Name', 'Enterprise Operations Hub')
+  .option('--no-open', 'Do not open browser automatically')
+  .action((options) => runProvisionCommand(options));
+
+program
+  .command('formula')
+  .description('Display enterprise formula snippets with syntax and output examples')
+  .option('-c, --category <category>', 'Filter by category (Visualization, Date & Time, Finance, Governance, Text Manipulation)')
+  .action((options) => runFormulaCommand(options.category));
 
 program
   .command('seed')

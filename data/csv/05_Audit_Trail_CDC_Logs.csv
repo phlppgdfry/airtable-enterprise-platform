@@ -1,0 +1,4 @@
+Event ID,Timestamp,Source,Action,Target Table,Record Reference,Payload Snapshot
+EVT-INIT-001,2026-10-26T18:00:00Z,CLI Migration,INSERT,Projects,PRJ-2026-AI-01,"{""action"": ""Initial Schema & Seed provisioning"", ""workspace"": ""wsp3p16CPCotJVZdX"", ""author"": ""Philippe Godfroy""}"
+EVT-CDC-002,2026-10-26T18:15:22Z,Webhook CDC,UPDATE,Tasks & Deliverables,TSK-AI-002,"{""changedFields"": {""Actual Hours"": {""current"": 38.0, ""previous"": 32.0}}, ""author"": ""philippe.godfroy@enterprise-hub.com""}"
+EVT-MCP-003,2026-10-26T18:30:10Z,MCP Agent,INSERT,Risk & Governance Log,RSK-003,"{""action"": ""Automated risk detection via Model Context Protocol"", ""confidence"": 0.94}"

@@ -1,0 +1,6 @@
+Full Name,Corporate Email,Department,Role Level,Weekly Capacity (Hours),Hourly Billing Rate (€),Primary Skillset,Is Active
+Philippe Godfroy,philippe.godfroy@enterprise-hub.com,Enterprise Architecture,Principal / Lead,40,185,"Enterprise Architecture, TypeScript / Node.js, Airtable Extensions SDK, Event-Driven Webhooks, AI / LLM Integration",true
+Elena Vance,elena.vance@enterprise-hub.com,Platform Engineering,Senior Staff,36,160,"TypeScript / Node.js, PostgreSQL / SQL, Cloud Infrastructure (AWS/GCP/Azure)",true
+Marcus Chen,marcus.chen@enterprise-hub.com,Data Architecture,Senior,40,145,"PostgreSQL / SQL, Event-Driven Webhooks, Cloud Infrastructure (AWS/GCP/Azure)",true
+Sophie Laurent,sophie.laurent@enterprise-hub.com,Product Management,Senior Staff,40,150,"Enterprise Architecture, React / Next.js",true
+Alexander Wright,alexander.wright@enterprise-hub.com,Quality & DevOps,Senior,38,140,"Cloud Infrastructure (AWS/GCP/Azure), TypeScript / Node.js, Event-Driven Webhooks",true

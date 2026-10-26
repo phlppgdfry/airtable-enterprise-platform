@@ -1,0 +1,5 @@
+Risk ID,Risk Statement,Severity,Likelihood,Mitigation Strategy,Status
+RSK-001,Airtable 5 req/sec API rate limit breach during peak batch synchronization,Major,Low,"Engineered token-bucket leaky queue with exponential backoff and jitter; batching mutations into 10-record chunks.",Resolved
+RSK-002,Webhook 7-day expiration causing dropped event notifications,Critical,Medium,"Scheduled automatic heartbeat cron job calling /refresh endpoint every 3 days.",Resolved
+RSK-003,Schema drift between local DDL code and live Airtable base,Major,Low,"Integrated airtable-toolkit schema:export and CI/CD validation steps to catch uncommitted schema changes.",Resolved
+RSK-004,Attachment storage exhaustion on high-volume document ingestion,Moderate,Low,"Enterprise trial allocation provides 20GB-1000GB; automated offloading to S3 cold storage after 90 days.",Mitigating

@@ -79,6 +79,24 @@ export class AirtableMetadataClient {
   }
 
   /**
+   * Create a new Base in a target workspace via Metadata API
+   */
+  public async createBase(
+    workspaceId: string,
+    name: string,
+    tables: Array<{ name: string; description?: string; fields: AirtableFieldSchema[] }>
+  ): Promise<{ id: string; tables: AirtableTableSchema[] }> {
+    const response = await this.rateLimiter.execute(async () => {
+      return this.client.post('/meta/bases', {
+        workspaceId,
+        name,
+        tables,
+      });
+    });
+    return response.data;
+  }
+
+  /**
    * Create a new table via Metadata API
    */
   public async createTable(

@@ -15,6 +15,8 @@
     "lint": "eslint src/ --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*.{ts,tsx,json,md}\"",
     "cli": "tsx src/cli/index.ts",
+    "provision": "tsx src/cli/index.ts provision",
+    "formula": "tsx src/cli/index.ts formula",
     "seed": "tsx src/cli/index.ts seed",
     "schema:export": "tsx src/cli/index.ts schema:export",
     "audit": "tsx src/cli/index.ts audit",

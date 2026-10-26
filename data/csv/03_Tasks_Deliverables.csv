@@ -1,0 +1,7 @@
+Task Key,Task Title,Workflow Stage,Estimated Hours,Actual Hours,Due Date,Complexity,Technical Notes
+TSK-AI-001,Design Event-Driven Webhook Ingestion Buffer,Done,32.0,28.5,2026-04-10,L (3-5d),"Implemented HMAC signature verification, idempotent transaction deduplication, and cursor-based payload polling."
+TSK-AI-002,Develop Custom React Extensions Resource Matrix,In Progress,45.0,38.0,2026-11-15,XL (> 1w),"Utilizing @airtable/blocks SDK, useWatchable hooks, globalConfig settings, and interactive Gantt-style capacity matrix."
+TSK-DATA-003,Metadata API Schema Migration Script,Done,24.0,21.0,2026-05-18,M (1-2d),"Automated declarative table and field DDL sync with token bucket rate-limiter."
+TSK-SEC-004,Audit Trail & Immutable Change Log Engine,In Progress,36.0,22.0,2026-11-20,L (3-5d),"Automatic CDC diffing capturing previous vs current cell values for regulatory compliance."
+TSK-OPS-005,Interface Designer Executive View Configuration,In Progress,18.0,12.0,2026-11-05,M (1-2d),"Configured multi-tab interface with KPI summary metrics, project Gantt chart, and team roster breakdown."
+TSK-AI-006,Model Context Protocol (MCP) Server Integration,Done,16.0,14.0,2026-10-26,S (3-5h),"Connected airtable-mcp-server for autonomous LLM schema inspection and record mutations."
