@@ -1,500 +1,666 @@
 [
   {
+    "id": "tblE5XO7pZwoZZVKk",
     "name": "Projects",
     "description": "Enterprise Project Portfolio Management with budget, health, and milestone tracking",
+    "primaryFieldId": "fldUgigTOR0ZB2F8o",
     "fields": [
       {
-        "name": "Project Code",
         "type": "singleLineText",
+        "id": "fldUgigTOR0ZB2F8o",
+        "name": "Project Code",
         "description": "Unique project identifier (e.g. PRJ-2026-01)"
       },
       {
-        "name": "Project Name",
         "type": "singleLineText",
+        "id": "fldYuYIuPlGY9YfET",
+        "name": "Project Name",
         "description": "Official initiative title"
       },
       {
-        "name": "Status",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "sel7KQC0dNWj0qXtz",
               "name": "Discovery",
               "color": "blueLight2"
             },
             {
+              "id": "selvIK6FWxJWgPkgl",
               "name": "Planning",
               "color": "cyanLight2"
             },
             {
+              "id": "selKThVgpd3Ff7lDu",
               "name": "Execution",
               "color": "greenLight2"
             },
             {
+              "id": "sely8H1XrZ8nB3Z8p",
               "name": "Testing & QA",
               "color": "yellowLight2"
             },
             {
+              "id": "selqzxopdXREZsRqP",
               "name": "Delivered",
               "color": "purpleLight2"
             },
             {
+              "id": "selcFE6PHzDLem2ts",
               "name": "On Hold",
               "color": "orangeLight2"
             }
           ]
-        }
+        },
+        "id": "fldO2hdjLbR05bwXP",
+        "name": "Status"
       },
       {
-        "name": "Priority",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "selKYgoRj0mMNsDon",
               "name": "P0 - Mission Critical",
               "color": "redLight2"
             },
             {
+              "id": "sel3iz798nXVHVfNx",
               "name": "P1 - High",
               "color": "orangeLight2"
             },
             {
+              "id": "selAPnG3bQxek4w8i",
               "name": "P2 - Medium",
               "color": "yellowLight2"
             },
             {
+              "id": "selJ845OWXasIrUhU",
               "name": "P3 - Low",
               "color": "grayLight2"
             }
           ]
-        }
+        },
+        "id": "fldqPHUwIMKkwn3mA",
+        "name": "Priority"
       },
       {
-        "name": "Budget Allocated (€)",
         "type": "currency",
         "options": {
           "precision": 2,
           "symbol": "€"
-        }
+        },
+        "id": "fldG0ye9R9tSyw2zC",
+        "name": "Budget Allocated (€)"
       },
       {
-        "name": "Budget Spent (€)",
         "type": "currency",
         "options": {
           "precision": 2,
           "symbol": "€"
-        }
+        },
+        "id": "fldj4yiG2H8yJGjcQ",
+        "name": "Budget Spent (€)"
       },
       {
-        "name": "Start Date",
         "type": "date",
         "options": {
           "dateFormat": {
-            "name": "iso"
+            "name": "iso",
+            "format": "YYYY-MM-DD"
           }
-        }
+        },
+        "id": "fldqWz5lJun9h5W9S",
+        "name": "Start Date"
       },
       {
-        "name": "Target Go-Live",
         "type": "date",
         "options": {
           "dateFormat": {
-            "name": "iso"
+            "name": "iso",
+            "format": "YYYY-MM-DD"
           }
-        }
+        },
+        "id": "fldHwtlsXSHm8Wq6v",
+        "name": "Target Go-Live"
       },
       {
-        "name": "Executive Sponsor",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldK1803fe8uPfEES",
+        "name": "Executive Sponsor"
       },
       {
-        "name": "Strategic Objectives",
-        "type": "multilineText"
+        "type": "multilineText",
+        "id": "flddeXN1wewddakM1",
+        "name": "Strategic Objectives"
+      }
+    ],
+    "views": [
+      {
+        "id": "viw6rKysSxFhOSA3Z",
+        "name": "Grid view",
+        "type": "grid"
       }
     ]
   },
   {
+    "id": "tblqfE6JsZ6du0r4y",
     "name": "Team Members",
     "description": "Enterprise Talent Pool, Capacity Planning & Department Allocation",
+    "primaryFieldId": "fldLAc1iSupok7fCO",
     "fields": [
       {
-        "name": "Full Name",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldLAc1iSupok7fCO",
+        "name": "Full Name"
       },
       {
-        "name": "Corporate Email",
-        "type": "email"
+        "type": "email",
+        "id": "fldMVf3YL06F6KDsW",
+        "name": "Corporate Email"
       },
       {
-        "name": "Department",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "selHHbMoOuvnpYWjA",
               "name": "Platform Engineering",
               "color": "blueLight2"
             },
             {
+              "id": "selVZEPGxP1N88UyV",
               "name": "Data Architecture",
               "color": "tealLight2"
             },
             {
+              "id": "selkr7Z9FOstLn2ax",
               "name": "Enterprise Architecture",
               "color": "purpleLight2"
             },
             {
+              "id": "selF6uqXpMfbyqwAy",
               "name": "Product Management",
               "color": "pinkLight2"
             },
             {
+              "id": "selMPUmTdah66cigE",
               "name": "Quality & DevOps",
               "color": "greenLight2"
             }
           ]
-        }
+        },
+        "id": "fldBUhFhP5xZXIVVP",
+        "name": "Department"
       },
       {
-        "name": "Role Level",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "selDWmp4OjDHtdVdY",
               "name": "Principal / Lead",
               "color": "redLight2"
             },
             {
+              "id": "selaCEfiDF1Xr7ib8",
               "name": "Senior Staff",
               "color": "orangeLight2"
             },
             {
+              "id": "sel1jCIPgeE8v35ik",
               "name": "Senior",
               "color": "greenLight2"
             },
             {
+              "id": "sel8VoHzPTobPFuus",
               "name": "Mid",
               "color": "cyanLight2"
             }
           ]
-        }
+        },
+        "id": "fldKNd6KUCWO6W8a2",
+        "name": "Role Level"
       },
       {
-        "name": "Weekly Capacity (Hours)",
         "type": "number",
         "options": {
           "precision": 1
-        }
+        },
+        "id": "fldFcnxf0FG2FoV9e",
+        "name": "Weekly Capacity (Hours)"
       },
       {
-        "name": "Hourly Billing Rate (€)",
         "type": "currency",
         "options": {
           "precision": 2,
           "symbol": "€"
-        }
+        },
+        "id": "fld1mUeNWMxiJprU9",
+        "name": "Hourly Billing Rate (€)"
       },
       {
-        "name": "Primary Skillset",
         "type": "multipleSelects",
         "options": {
           "choices": [
             {
-              "name": "TypeScript / Node.js"
+              "id": "seltQcqsbZSF2AG9Z",
+              "name": "TypeScript / Node.js",
+              "color": "grayLight2"
             },
             {
-              "name": "React / Next.js"
+              "id": "selg2HU5pqP7HJtzS",
+              "name": "React / Next.js",
+              "color": "grayLight2"
             },
             {
-              "name": "Airtable Extensions SDK"
+              "id": "sel3bhUcnEYyzvQFp",
+              "name": "Airtable Extensions SDK",
+              "color": "grayLight2"
             },
             {
-              "name": "PostgreSQL / SQL"
+              "id": "seljnQ0cQPL32kw2z",
+              "name": "PostgreSQL / SQL",
+              "color": "grayLight2"
             },
             {
-              "name": "Event-Driven Webhooks"
+              "id": "selAkQ0Bshyx4ylE6",
+              "name": "Event-Driven Webhooks",
+              "color": "grayLight2"
             },
             {
-              "name": "AI / LLM Integration"
+              "id": "selNjAhfZWrciRZNc",
+              "name": "AI / LLM Integration",
+              "color": "grayLight2"
             },
             {
-              "name": "Cloud Infrastructure (AWS/GCP/Azure)"
+              "id": "sely77mOAHxHSdUdh",
+              "name": "Cloud Infrastructure (AWS/GCP/Azure)",
+              "color": "grayLight2"
+            },
+            {
+              "id": "selQmTJWevrHuuGob",
+              "name": "Enterprise Architecture",
+              "color": "blueLight2"
             }
           ]
-        }
+        },
+        "id": "fldgiYMfuNhuUFrBH",
+        "name": "Primary Skillset"
       },
       {
-        "name": "Is Active",
         "type": "checkbox",
         "options": {
           "icon": "check",
           "color": "greenBright"
-        }
+        },
+        "id": "fldizXkErMmY5r1DV",
+        "name": "Is Active"
+      }
+    ],
+    "views": [
+      {
+        "id": "viwbWTlMz1Ixa1P7e",
+        "name": "Grid view",
+        "type": "grid"
       }
     ]
   },
   {
+    "id": "tbljpIXTX4G8m8x26",
     "name": "Tasks & Deliverables",
     "description": "Granular WBS Work Packages, Sprint items, and technical deliverables",
+    "primaryFieldId": "fld0GZwewC6nfrfHT",
     "fields": [
       {
-        "name": "Task Key",
         "type": "singleLineText",
+        "id": "fld0GZwewC6nfrfHT",
+        "name": "Task Key",
         "description": "e.g. TSK-101"
       },
       {
-        "name": "Task Title",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldQTWUwShuTktJ2t",
+        "name": "Task Title"
       },
       {
-        "name": "Workflow Stage",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "selb3o5Foq6o6ZBGY",
               "name": "Backlog",
               "color": "grayLight2"
             },
             {
+              "id": "selT9SesMvg9w76lE",
               "name": "In Progress",
               "color": "blueLight2"
             },
             {
+              "id": "selYk9UG27ZGd2gF5",
               "name": "Code Review",
               "color": "purpleLight2"
             },
             {
+              "id": "selrXlBxOmdtwZKMm",
               "name": "Verification",
               "color": "yellowLight2"
             },
             {
+              "id": "selJbufwJruRwgfqj",
               "name": "Done",
               "color": "greenLight2"
             },
             {
+              "id": "selmSausRs9ZjpVNv",
               "name": "Blocked",
               "color": "redLight2"
             }
           ]
-        }
+        },
+        "id": "fldu7Nf5lZh6FGW7Y",
+        "name": "Workflow Stage"
       },
       {
-        "name": "Estimated Hours",
         "type": "number",
         "options": {
           "precision": 1
-        }
+        },
+        "id": "fldsSkbEpBryfcuFi",
+        "name": "Estimated Hours"
       },
       {
-        "name": "Actual Hours",
         "type": "number",
         "options": {
           "precision": 1
-        }
+        },
+        "id": "fldSyu6uVgmKOLZUs",
+        "name": "Actual Hours"
       },
       {
-        "name": "Due Date",
         "type": "date",
         "options": {
           "dateFormat": {
-            "name": "iso"
+            "name": "iso",
+            "format": "YYYY-MM-DD"
           }
-        }
+        },
+        "id": "fldcWWm23brqZCjy2",
+        "name": "Due Date"
       },
       {
-        "name": "Complexity",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
-              "name": "XS (1-2h)"
+              "id": "selz51DL4MEwcHHwl",
+              "name": "XS (1-2h)",
+              "color": "grayLight2"
             },
             {
-              "name": "S (3-5h)"
+              "id": "selvepHSXn9Kcz5gz",
+              "name": "S (3-5h)",
+              "color": "grayLight2"
             },
             {
-              "name": "M (1-2d)"
+              "id": "selT2IZECorRtgst0",
+              "name": "M (1-2d)",
+              "color": "grayLight2"
             },
             {
-              "name": "L (3-5d)"
+              "id": "sellT9ju4Ag8GQf3f",
+              "name": "L (3-5d)",
+              "color": "grayLight2"
             },
             {
-              "name": "XL (> 1w)"
+              "id": "selvHyqmIVSdxkCGn",
+              "name": "XL (> 1w)",
+              "color": "grayLight2"
             }
           ]
-        }
+        },
+        "id": "fldAyv7APJZQskKRd",
+        "name": "Complexity"
       },
       {
-        "name": "Technical Notes",
-        "type": "multilineText"
+        "type": "multilineText",
+        "id": "fld6wQM2FfyBDZKex",
+        "name": "Technical Notes"
+      }
+    ],
+    "views": [
+      {
+        "id": "viwNmE4hZCAwtIug1",
+        "name": "Grid view",
+        "type": "grid"
       }
     ]
   },
   {
+    "id": "tblBVxyCzaMV24Zof",
     "name": "Risk & Governance Log",
     "description": "Enterprise Risk Management (ERM), architectural blockers and mitigations",
+    "primaryFieldId": "fldFB78LhaVHBV3ob",
     "fields": [
       {
-        "name": "Risk ID",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldFB78LhaVHBV3ob",
+        "name": "Risk ID"
       },
       {
-        "name": "Risk Statement",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldCixxD5cY4eJt9w",
+        "name": "Risk Statement"
       },
       {
-        "name": "Severity",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "sel10mWCcL77Ll0VU",
               "name": "Critical",
               "color": "redBright"
             },
             {
+              "id": "sellSbllIBqJwHtyO",
               "name": "Major",
               "color": "orangeBright"
             },
             {
+              "id": "selp5gn5RiPxwRYSF",
               "name": "Moderate",
               "color": "yellowBright"
             },
             {
+              "id": "selCQFUxhGScRwFk2",
               "name": "Minor",
               "color": "blueBright"
             }
           ]
-        }
+        },
+        "id": "fld2ueRtCEUMupaAF",
+        "name": "Severity"
       },
       {
-        "name": "Likelihood",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
-              "name": "High"
+              "id": "selCuCv6gq5hU1pkB",
+              "name": "High",
+              "color": "grayLight2"
             },
             {
-              "name": "Medium"
+              "id": "selA9TThdRS51aHud",
+              "name": "Medium",
+              "color": "grayLight2"
             },
             {
-              "name": "Low"
+              "id": "selrpP0UtnfbiQ9iV",
+              "name": "Low",
+              "color": "grayLight2"
             }
           ]
-        }
+        },
+        "id": "fldjEcVB8W9k1x5Wn",
+        "name": "Likelihood"
       },
       {
-        "name": "Mitigation Strategy",
-        "type": "multilineText"
+        "type": "multilineText",
+        "id": "fldw5GoHHx5A8pzUQ",
+        "name": "Mitigation Strategy"
       },
       {
-        "name": "Status",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "sel4FsGJJuLudw86X",
               "name": "Identified",
               "color": "redLight2"
             },
             {
+              "id": "sel0COmEttK3sxu3T",
               "name": "Mitigating",
               "color": "yellowLight2"
             },
             {
+              "id": "sel2NicGYRVS9piOv",
               "name": "Resolved",
               "color": "greenLight2"
             },
             {
+              "id": "selTMdkJCtT3sMUYW",
               "name": "Accepted",
               "color": "grayLight2"
             }
           ]
-        }
+        },
+        "id": "fldM8D2cNrWP7cidp",
+        "name": "Status"
+      }
+    ],
+    "views": [
+      {
+        "id": "viwteUS9QDEmHPQHf",
+        "name": "Grid view",
+        "type": "grid"
       }
     ]
   },
   {
+    "id": "tblDT4TRhSKgxkSsA",
     "name": "Audit Trail & CDC Logs",
     "description": "Immutable record of Webhook events, external sync mutations, and schema diffs",
+    "primaryFieldId": "fldPD1mtoXxPSouZ9",
     "fields": [
       {
-        "name": "Event ID",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldPD1mtoXxPSouZ9",
+        "name": "Event ID"
       },
       {
-        "name": "Timestamp",
         "type": "dateTime",
         "options": {
           "dateFormat": {
-            "name": "iso"
+            "name": "iso",
+            "format": "YYYY-MM-DD"
           },
           "timeFormat": {
-            "name": "24hour"
+            "name": "24hour",
+            "format": "HH:mm"
           },
           "timeZone": "utc"
-        }
+        },
+        "id": "fldogIK3NyWSRQV6F",
+        "name": "Timestamp"
       },
       {
-        "name": "Source",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "selfV5BB2dB0ZglqS",
               "name": "Webhook CDC",
               "color": "blueLight2"
             },
             {
+              "id": "sel26DD796FDRaURe",
               "name": "Batch Sync Engine",
               "color": "cyanLight2"
             },
             {
+              "id": "selODPddYBvxd4v7G",
               "name": "Airtable Automation",
               "color": "purpleLight2"
             },
             {
+              "id": "sel4ib2UzLFMndlJa",
               "name": "MCP Agent",
               "color": "greenLight2"
             },
             {
+              "id": "selChgFF1lzihIrVj",
               "name": "CLI Migration",
               "color": "orangeLight2"
             }
           ]
-        }
+        },
+        "id": "fldwaqB7WVejTnk1d",
+        "name": "Source"
       },
       {
-        "name": "Action",
         "type": "singleSelect",
         "options": {
           "choices": [
             {
+              "id": "selVAPUEAzUjgN1DV",
               "name": "INSERT",
               "color": "greenLight2"
             },
             {
+              "id": "selTmEA2tBlAARyJC",
               "name": "UPDATE",
               "color": "yellowLight2"
             },
             {
+              "id": "selxtWNpE5fwtJD5u",
               "name": "DELETE",
               "color": "redLight2"
             },
             {
+              "id": "selIl8HSq7SUVRRVw",
               "name": "SCHEMA_ALTER",
               "color": "purpleLight2"
             }
           ]
-        }
+        },
+        "id": "fldf5DyNSEAtgVlAM",
+        "name": "Action"
       },
       {
-        "name": "Target Table",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldOj0fBko0Vfq2qe",
+        "name": "Target Table"
       },
       {
-        "name": "Record Reference",
-        "type": "singleLineText"
+        "type": "singleLineText",
+        "id": "fldyOjqBYajJDbF9M",
+        "name": "Record Reference"
       },
       {
-        "name": "Payload Snapshot",
-        "type": "multilineText"
+        "type": "multilineText",
+        "id": "fldTWyj6xbKlx8ihe",
+        "name": "Payload Snapshot"
+      }
+    ],
+    "views": [
+      {
+        "id": "viwnmv4shZNEqg9gV",
+        "name": "Grid view",
+        "type": "grid"
       }
     ]
   }

@@ -151,22 +151,28 @@ AIRTABLE_BASE_ID=appYourBaseIdHere
 AIRTABLE_WORKSPACE_ID=wsp3p16CPCotJVZdX
 ```
 
-### 4. Provision Base Directly into Workspace (POST /v0/meta/bases)
+### 4. Enterprise CLI Suite
 ```bash
-# 1-Click automatic provisioning into workspace wsp3p16CPCotJVZdX:
-npm run provision -- --token <YOUR_AIRTABLE_PAT>
+# Real-time Executive Terminal Dashboard:
+npm run dashboard
 
-# Or explore the formula library:
+# Build 2-way Relational Graph (Linked Records):
+npm run link
+
+# Create versioned JSON/NDJSON Disaster Recovery Snapshot:
+npm run backup
+
+# Introspect schema and export TypeScript definitions:
+npm run schema:export
+
+# Explore enterprise formulas:
 npm run formula
 
 # Audit base health & conventions:
 npm run audit
 
-# Introspect schema and export TypeScript definitions:
-npm run schema:export
-
-# Provision schema and seed enterprise data (supports --dry-run):
-npm run seed -- --dry-run
+# Automated base provisioning into target workspace:
+npm run provision
 ```
 
 ### 5. Alternative: Instant CSV Import (No Token Required!)

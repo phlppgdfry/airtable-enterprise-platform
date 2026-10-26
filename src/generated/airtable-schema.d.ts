@@ -1,6 +1,6 @@
 /**
  * Auto-generated Airtable TypeScript Type Definitions
- * Generated: 2026-10-26T18:35:21.577Z
+ * Generated: 2026-10-26T23:45:32.128Z
  */
 
 export interface AirtableRecordProjects {

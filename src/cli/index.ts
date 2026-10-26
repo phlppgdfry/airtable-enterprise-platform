@@ -18,6 +18,9 @@ import { runSchemaExportCommand } from './commands/schemaExport.js';
 import { runAuditCommand } from './commands/audit.js';
 import { runWebhookManageCommand } from './commands/webhookManage.js';
 import { runFormulaCommand } from './commands/formulaPlayground.js';
+import { runLinkRelationsCommand } from './commands/linkRelations.js';
+import { runDashboardCommand } from './commands/dashboard.js';
+import { runBackupCommand } from './commands/backup.js';
 
 dotenv.config();
 
@@ -27,6 +30,17 @@ program
   .name('airtable-toolkit')
   .description('Airtable Enterprise Engineering CLI — Extensions, Metadata API, Webhooks & Migrations')
   .version('1.0.0');
+
+program
+  .command('dashboard')
+  .description('Display real-time terminal executive dashboard with telemetry and KPI meters')
+  .action(() => runDashboardCommand());
+
+program
+  .command('backup')
+  .description('Export complete base snapshot with JSON/NDJSON and checksum manifest')
+  .option('-o, --out-dir <outDir>', 'Output directory for snapshot files')
+  .action((options) => runBackupCommand(options));
 
 program
   .command('provision')
@@ -42,6 +56,11 @@ program
   .description('Display enterprise formula snippets with syntax and output examples')
   .option('-c, --category <category>', 'Filter by category (Visualization, Date & Time, Finance, Governance, Text Manipulation)')
   .action((options) => runFormulaCommand(options.category));
+
+program
+  .command('link')
+  .description('Connect tables with linked record fields and build the relational graph')
+  .action(() => runLinkRelationsCommand());
 
 program
   .command('seed')
