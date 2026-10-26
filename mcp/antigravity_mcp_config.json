@@ -1,0 +1,9 @@
+{
+  "airtable": {
+    "command": "airtable-mcp-server",
+    "args": [],
+    "env": {
+      "AIRTABLE_API_KEY": "${env:AIRTABLE_API_KEY}"
+    }
+  }
+}

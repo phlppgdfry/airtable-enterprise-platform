@@ -1,0 +1,5 @@
+{
+  "id": "blkResourceMatrixShowcase",
+  "name": "Enterprise Capacity & Resource Matrix",
+  "frontendEntry": "frontend/index.tsx"
+}

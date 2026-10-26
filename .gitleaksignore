@@ -1,0 +1,6 @@
+.env.example:airtable-api-key:26
+src/client/batchUpsert.ts:airtable-api-key:12
+README.md:airtable-api-key:150
+README.md:airtable-api-key:151
+src/cli/commands/seed.ts:airtable-api-key:26
+src/client/metadataClient.ts:airtable-api-key:11

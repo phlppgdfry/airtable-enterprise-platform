@@ -1,0 +1,355 @@
+/**
+ * Enterprise Architecture Schema Definition
+ * 
+ * Defines the complete DDL schema for an Enterprise Digital Transformation & Operations Hub:
+ * - Projects (Portfolio governance & health tracking)
+ * - Tasks / Deliverables (Sprint execution & effort tracking)
+ * - Sprints (Agile velocity & timeboxing)
+ * - Team Capacity (Resource allocation & utilization matrix)
+ * - Risk & Change Log (Governance, mitigations, severity)
+ * - Immutable Audit Log (CDC event history)
+ */
+
+import { AirtableFieldSchema } from '../client/metadataClient.js';
+
+export interface EnterpriseTableDefinition {
+  name: string;
+  description: string;
+  fields: AirtableFieldSchema[];
+}
+
+export const ENTERPRISE_SCHEMA: EnterpriseTableDefinition[] = [
+  {
+    name: 'Projects',
+    description: 'Enterprise Project Portfolio Management with budget, health, and milestone tracking',
+    fields: [
+      {
+        name: 'Project Code',
+        type: 'singleLineText',
+        description: 'Unique project identifier (e.g. PRJ-2026-01)',
+      },
+      {
+        name: 'Project Name',
+        type: 'singleLineText',
+        description: 'Official initiative title',
+      },
+      {
+        name: 'Status',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Discovery', color: 'blueLight2' },
+            { name: 'Planning', color: 'cyanLight2' },
+            { name: 'Execution', color: 'greenLight2' },
+            { name: 'Testing & QA', color: 'yellowLight2' },
+            { name: 'Delivered', color: 'purpleLight2' },
+            { name: 'On Hold', color: 'orangeLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Priority',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'P0 - Mission Critical', color: 'redLight2' },
+            { name: 'P1 - High', color: 'orangeLight2' },
+            { name: 'P2 - Medium', color: 'yellowLight2' },
+            { name: 'P3 - Low', color: 'grayLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Budget Allocated (€)',
+        type: 'currency',
+        options: {
+          precision: 2,
+          symbol: '€',
+        },
+      },
+      {
+        name: 'Budget Spent (€)',
+        type: 'currency',
+        options: {
+          precision: 2,
+          symbol: '€',
+        },
+      },
+      {
+        name: 'Start Date',
+        type: 'date',
+        options: {
+          dateFormat: { name: 'iso' },
+        },
+      },
+      {
+        name: 'Target Go-Live',
+        type: 'date',
+        options: {
+          dateFormat: { name: 'iso' },
+        },
+      },
+      {
+        name: 'Executive Sponsor',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Strategic Objectives',
+        type: 'multilineText',
+      },
+    ],
+  },
+  {
+    name: 'Team Members',
+    description: 'Enterprise Talent Pool, Capacity Planning & Department Allocation',
+    fields: [
+      {
+        name: 'Full Name',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Corporate Email',
+        type: 'email',
+      },
+      {
+        name: 'Department',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Platform Engineering', color: 'blueLight2' },
+            { name: 'Data Architecture', color: 'tealLight2' },
+            { name: 'Enterprise Architecture', color: 'purpleLight2' },
+            { name: 'Product Management', color: 'pinkLight2' },
+            { name: 'Quality & DevOps', color: 'greenLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Role Level',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Principal / Lead', color: 'redLight2' },
+            { name: 'Senior Staff', color: 'orangeLight2' },
+            { name: 'Senior', color: 'greenLight2' },
+            { name: 'Mid', color: 'cyanLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Weekly Capacity (Hours)',
+        type: 'number',
+        options: {
+          precision: 1,
+        },
+      },
+      {
+        name: 'Hourly Billing Rate (€)',
+        type: 'currency',
+        options: {
+          precision: 2,
+          symbol: '€',
+        },
+      },
+      {
+        name: 'Primary Skillset',
+        type: 'multipleSelects',
+        options: {
+          choices: [
+            { name: 'TypeScript / Node.js' },
+            { name: 'React / Next.js' },
+            { name: 'Airtable Extensions SDK' },
+            { name: 'PostgreSQL / SQL' },
+            { name: 'Event-Driven Webhooks' },
+            { name: 'AI / LLM Integration' },
+            { name: 'Cloud Infrastructure (AWS/GCP/Azure)' },
+          ],
+        },
+      },
+      {
+        name: 'Is Active',
+        type: 'checkbox',
+        options: {
+          icon: 'check',
+          color: 'greenBright',
+        },
+      },
+    ],
+  },
+  {
+    name: 'Tasks & Deliverables',
+    description: 'Granular WBS Work Packages, Sprint items, and technical deliverables',
+    fields: [
+      {
+        name: 'Task Key',
+        type: 'singleLineText',
+        description: 'e.g. TSK-101',
+      },
+      {
+        name: 'Task Title',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Workflow Stage',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Backlog', color: 'grayLight2' },
+            { name: 'In Progress', color: 'blueLight2' },
+            { name: 'Code Review', color: 'purpleLight2' },
+            { name: 'Verification', color: 'yellowLight2' },
+            { name: 'Done', color: 'greenLight2' },
+            { name: 'Blocked', color: 'redLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Estimated Hours',
+        type: 'number',
+        options: {
+          precision: 1,
+        },
+      },
+      {
+        name: 'Actual Hours',
+        type: 'number',
+        options: {
+          precision: 1,
+        },
+      },
+      {
+        name: 'Due Date',
+        type: 'date',
+        options: {
+          dateFormat: { name: 'iso' },
+        },
+      },
+      {
+        name: 'Complexity',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'XS (1-2h)' },
+            { name: 'S (3-5h)' },
+            { name: 'M (1-2d)' },
+            { name: 'L (3-5d)' },
+            { name: 'XL (> 1w)' },
+          ],
+        },
+      },
+      {
+        name: 'Technical Notes',
+        type: 'multilineText',
+      },
+    ],
+  },
+  {
+    name: 'Risk & Governance Log',
+    description: 'Enterprise Risk Management (ERM), architectural blockers and mitigations',
+    fields: [
+      {
+        name: 'Risk ID',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Risk Statement',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Severity',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Critical', color: 'redBright' },
+            { name: 'Major', color: 'orangeBright' },
+            { name: 'Moderate', color: 'yellowBright' },
+            { name: 'Minor', color: 'blueBright' },
+          ],
+        },
+      },
+      {
+        name: 'Likelihood',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'High' },
+            { name: 'Medium' },
+            { name: 'Low' },
+          ],
+        },
+      },
+      {
+        name: 'Mitigation Strategy',
+        type: 'multilineText',
+      },
+      {
+        name: 'Status',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Identified', color: 'redLight2' },
+            { name: 'Mitigating', color: 'yellowLight2' },
+            { name: 'Resolved', color: 'greenLight2' },
+            { name: 'Accepted', color: 'grayLight2' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    name: 'Audit Trail & CDC Logs',
+    description: 'Immutable record of Webhook events, external sync mutations, and schema diffs',
+    fields: [
+      {
+        name: 'Event ID',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Timestamp',
+        type: 'dateTime',
+        options: {
+          dateFormat: { name: 'iso' },
+          timeFormat: { name: '24hour' },
+          timeZone: 'utc',
+        },
+      },
+      {
+        name: 'Source',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'Webhook CDC', color: 'blueLight2' },
+            { name: 'Batch Sync Engine', color: 'cyanLight2' },
+            { name: 'Airtable Automation', color: 'purpleLight2' },
+            { name: 'MCP Agent', color: 'greenLight2' },
+            { name: 'CLI Migration', color: 'orangeLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Action',
+        type: 'singleSelect',
+        options: {
+          choices: [
+            { name: 'INSERT', color: 'greenLight2' },
+            { name: 'UPDATE', color: 'yellowLight2' },
+            { name: 'DELETE', color: 'redLight2' },
+            { name: 'SCHEMA_ALTER', color: 'purpleLight2' },
+          ],
+        },
+      },
+      {
+        name: 'Target Table',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Record Reference',
+        type: 'singleLineText',
+      },
+      {
+        name: 'Payload Snapshot',
+        type: 'multilineText',
+      },
+    ],
+  },
+];
