@@ -34,12 +34,19 @@ export interface ProvisionOptions {
 
 export async function runProvisionCommand(options: ProvisionOptions) {
   const token = options.token || process.env.AIRTABLE_API_KEY;
-  const workspaceId = options.workspaceId || process.env.AIRTABLE_WORKSPACE_ID || 'wsp3p16CPCotJVZdX';
+  const workspaceId = options.workspaceId || process.env.AIRTABLE_WORKSPACE_ID;
   const baseName = options.baseName || 'Enterprise Operations Hub';
 
   logger.section('Airtable Enterprise Workspace Provisioner');
-  logger.keyVal('Target Workspace', `https://airtable.com/workspaces/${workspaceId}`);
+  if (workspaceId) {
+    logger.keyVal('Target Workspace', `https://airtable.com/workspaces/${workspaceId}`);
+  }
   logger.keyVal('Base Name', baseName);
+
+  if (!workspaceId) {
+    logger.error('Missing target Workspace ID. Please provide --workspace-id <wspId> or set AIRTABLE_WORKSPACE_ID in .env');
+    return;
+  }
 
   if (!token || token.startsWith('pat_your')) {
     logger.warn('\nGeen actieve AIRTABLE_API_KEY gevonden.');

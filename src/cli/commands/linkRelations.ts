@@ -5,13 +5,26 @@
  * 1. Creates Linked Record field: Tasks & Deliverables -> Projects
  * 2. Creates Linked Record field: Tasks & Deliverables -> Assignee (Team Members)
  * 3. Creates Linked Record field: Risk & Governance Log -> Projects
- * 4. Automatically establishes relationships across existing seed records
+ * 4. Paginated traversal of all records with dynamic natural-key reconciliation
  */
 
 import { logger } from '../utils/logger.js';
 import { AirtableMetadataClient } from '../../client/metadataClient.js';
 import { AirtableBatchEngine } from '../../client/batchUpsert.js';
+import { globalRateLimiter } from '../utils/rateLimiter.js';
 import axios from 'axios';
+
+async function fetchAllRecords(client: any, tableName: string): Promise<any[]> {
+  const records: any[] = [];
+  let offset: string | undefined = undefined;
+  do {
+    const url = `/${encodeURIComponent(tableName)}?pageSize=100${offset ? `&offset=${encodeURIComponent(offset)}` : ''}`;
+    const res: any = await globalRateLimiter.execute(() => client.get(url));
+    records.push(...res.data.records);
+    offset = res.data.offset;
+  } while (offset);
+  return records;
+}
 
 export async function runLinkRelationsCommand() {
   const apiKey = process.env.AIRTABLE_API_KEY;
@@ -89,41 +102,55 @@ export async function runLinkRelationsCommand() {
     logger.info('Field "Related Project" already exists on Risk & Governance Log.');
   }
 
-  // 4. Populate record links
-  logger.info('Populating relational foreign keys across existing records...');
+  // 4. Paginated Record Fetch & Relational Mapping
+  logger.info('Traversing records across all tables (with pagination)...');
   const client = axios.create({
     baseURL: `https://api.airtable.com/v0/${baseId}`,
     headers: { Authorization: `Bearer ${apiKey}` },
   });
 
-  const [projectsRes, teamRes, tasksRes, risksRes] = await Promise.all([
-    client.get('/Projects'),
-    client.get('/Team%20Members'),
-    client.get('/Tasks%20%26%20Deliverables'),
-    client.get('/Risk%20%26%20Governance%20Log'),
+  const [projects, team, tasks, risks] = await Promise.all([
+    fetchAllRecords(client, 'Projects'),
+    fetchAllRecords(client, 'Team Members'),
+    fetchAllRecords(client, 'Tasks & Deliverables'),
+    fetchAllRecords(client, 'Risk & Governance Log'),
   ]);
 
-  const projects = projectsRes.data.records;
-  const team = teamRes.data.records;
-  const tasks = tasksRes.data.records;
-  const risks = risksRes.data.records;
+  const projectsByCode = new Map<string, any>();
+  for (const p of projects) {
+    if (p.fields['Project Code']) projectsByCode.set(p.fields['Project Code'], p);
+  }
 
-  const prjAi = projects.find((p: any) => p.fields['Project Code'] === 'PRJ-2026-AI-01');
-  const prjData = projects.find((p: any) => p.fields['Project Code'] === 'PRJ-2026-DATA-02');
-  const memberPhilippe = team.find((m: any) => m.fields['Full Name'] === 'Philippe Godfroy');
-  const memberElena = team.find((m: any) => m.fields['Full Name'] === 'Elena Vance');
+  const teamByEmail = new Map<string, any>();
+  for (const m of team) {
+    if (m.fields['Corporate Email']) teamByEmail.set(m.fields['Corporate Email'], m);
+  }
+
+  const defaultProject = projects[0];
+  const defaultMember = team[0];
 
   const taskUpdates: any[] = [];
   for (const task of tasks) {
-    const key = task.fields['Task Key'];
+    const key = task.fields['Task Key'] || '';
     const fieldsToUpdate: any = {};
 
-    if (key === 'TSK-AI-001' || key === 'TSK-AI-002') {
-      if (prjAi) fieldsToUpdate['Project'] = [prjAi.id];
-      if (memberPhilippe) fieldsToUpdate['Assignee'] = [memberPhilippe.id];
-    } else if (key === 'TSK-DATA-003' || key === 'TSK-SEC-004') {
-      if (prjData) fieldsToUpdate['Project'] = [prjData.id];
-      if (memberElena) fieldsToUpdate['Assignee'] = [memberElena.id];
+    // Dynamic resolution based on task key prefix or fallback
+    if (!task.fields['Project']) {
+      if (key.includes('AI') && projectsByCode.has('PRJ-2026-AI-01')) {
+        fieldsToUpdate['Project'] = [projectsByCode.get('PRJ-2026-AI-01').id];
+      } else if (key.includes('DATA') && projectsByCode.has('PRJ-2026-DATA-02')) {
+        fieldsToUpdate['Project'] = [projectsByCode.get('PRJ-2026-DATA-02').id];
+      } else if (key.includes('OPS') && projectsByCode.has('PRJ-2026-OPS-03')) {
+        fieldsToUpdate['Project'] = [projectsByCode.get('PRJ-2026-OPS-03').id];
+      } else if (key.includes('SEC') && projectsByCode.has('PRJ-2026-SEC-04')) {
+        fieldsToUpdate['Project'] = [projectsByCode.get('PRJ-2026-SEC-04').id];
+      } else if (defaultProject) {
+        fieldsToUpdate['Project'] = [defaultProject.id];
+      }
+    }
+
+    if (!task.fields['Assignee'] && defaultMember) {
+      fieldsToUpdate['Assignee'] = [defaultMember.id];
     }
 
     if (Object.keys(fieldsToUpdate).length > 0) {
@@ -134,21 +161,24 @@ export async function runLinkRelationsCommand() {
   const batchEngine = new AirtableBatchEngine(baseId, apiKey);
   if (taskUpdates.length > 0) {
     await batchEngine.batchUpdate('Tasks & Deliverables', taskUpdates);
-    logger.success(`Linked ${taskUpdates.length} tasks to Projects and Assignees!`);
+    logger.success(`Linked ${taskUpdates.length} task(s) to Projects and Assignees!`);
+  } else {
+    logger.info('All tasks are already linked to Projects and Assignees.');
   }
 
-  // Link Risks
+  // Link Risks dynamically
   const riskUpdates: any[] = [];
   for (const risk of risks) {
-    if (prjAi) {
-      riskUpdates.push({ id: risk.id, fields: { 'Related Project': [prjAi.id] } });
+    if (!risk.fields['Related Project'] && defaultProject) {
+      riskUpdates.push({ id: risk.id, fields: { 'Related Project': [defaultProject.id] } });
     }
   }
   if (riskUpdates.length > 0) {
     await batchEngine.batchUpdate('Risk & Governance Log', riskUpdates);
-    logger.success(`Linked ${riskUpdates.length} risks to Strategic Projects!`);
+    logger.success(`Linked ${riskUpdates.length} risk(s) to Strategic Projects!`);
+  } else {
+    logger.info('All risks are already linked to Strategic Projects.');
   }
 
-  logger.section('🎉 Relational Graph Active!');
-  logger.info(`Open your base to see 2-way linked records: https://airtable.com/${baseId}`);
+  logger.section('🎉 Relational Graph Active & Synchronized');
 }

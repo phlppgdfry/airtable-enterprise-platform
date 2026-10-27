@@ -3,14 +3,16 @@
  * 
  * Express microservice handling:
  * - Airtable webhook ping reception
- * - HMAC-SHA256 signature verification (X-Airtable-Content-MAC)
- * - Cursor-based polling of transaction payloads (/payloads)
+ * - Constant-time HMAC-SHA256 signature verification (X-Airtable-Content-MAC)
+ * - Persistent cursor-based polling of transaction payloads (/payloads)
  * - Integration with CDCEventDispatcher
- * - Automatic webhook lease heartbeating
+ * - Hardened against timing attacks, RangeError DoS, and unauthenticated forging
  */
 
 import express, { Request, Response } from 'express';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import dotenv from 'dotenv';
 import { AirtableMetadataClient } from '../client/metadataClient.js';
 import { CDCEventDispatcher } from './cdcDispatcher.js';
@@ -27,8 +29,36 @@ const apiKey = process.env.AIRTABLE_API_KEY || '';
 const metadataClient = new AirtableMetadataClient(apiKey);
 export const cdcDispatcher = new CDCEventDispatcher();
 
-// In-memory cursor store (in production, use Redis or Postgres)
+// Persistent Cursor Store (backed by JSON file for restart resilience)
+const cursorFilePath = path.resolve(process.cwd(), '.webhook_cursors.json');
 const cursorStore = new Map<string, number>();
+
+// Load persisted cursors on startup
+if (fs.existsSync(cursorFilePath)) {
+  try {
+    const raw = fs.readFileSync(cursorFilePath, 'utf-8');
+    const parsed = JSON.parse(raw);
+    for (const [k, v] of Object.entries(parsed)) {
+      cursorStore.set(k, Number(v));
+    }
+    logger.info(`Loaded ${cursorStore.size} persisted webhook cursor(s).`);
+  } catch (err: any) {
+    logger.warn(`Could not read cursor file: ${err.message}`);
+  }
+}
+
+function persistCursor(webhookId: string, cursor: number) {
+  cursorStore.set(webhookId, cursor);
+  try {
+    const obj: Record<string, number> = {};
+    for (const [k, v] of cursorStore.entries()) {
+      obj[k] = v;
+    }
+    fs.writeFileSync(cursorFilePath, JSON.stringify(obj, null, 2), 'utf-8');
+  } catch (err: any) {
+    logger.warn(`Could not persist webhook cursor: ${err.message}`);
+  }
+}
 
 // Middleware to capture raw body for HMAC verification
 app.use(
@@ -40,19 +70,39 @@ app.use(
 );
 
 /**
- * Verify Airtable HMAC-SHA256 header (X-Airtable-Content-MAC)
+ * Constant-time verification of Airtable HMAC-SHA256 header (X-Airtable-Content-MAC)
+ * Hardened against RangeError DoS and timing attacks
  */
-function verifyAirtableSignature(req: any): boolean {
-  if (!webhookSecret) return true; // Bypass in local development if no secret set
-  const signature = req.headers['x-airtable-content-mac'];
+export function verifyAirtableSignature(req: any, secretOverride?: string): boolean {
+  const secret = secretOverride ?? webhookSecret;
+
+  if (!secret) {
+    if (process.env.NODE_ENV === 'production') {
+      logger.error('CRITICAL: WEBHOOK_SECRET is not configured in production environment. Rejecting ping.');
+      return false;
+    }
+    logger.warn('WEBHOOK_SECRET is unset. Local development bypass active.');
+    return true;
+  }
+
+  const signature = req.headers?.['x-airtable-content-mac'];
   if (!signature || !req.rawBody) return false;
 
   const expectedSignature = crypto
-    .createHmac('sha256', webhookSecret)
+    .createHmac('sha256', secret)
     .update(req.rawBody)
     .digest('hex');
 
-  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
+  // Both buffers must be validated for identical length before invoking timingSafeEqual
+  // to prevent Node.js RangeError unhandled exceptions (DoS vulnerability)
+  const sigBuf = Buffer.from(signature, 'utf-8');
+  const expectedBuf = Buffer.from(expectedSignature, 'utf-8');
+
+  if (sigBuf.length !== expectedBuf.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(sigBuf, expectedBuf);
 }
 
 /**
@@ -98,7 +148,7 @@ app.post('/api/webhooks/airtable', async (req: Request, res: Response) => {
       }
     }
 
-    cursorStore.set(webhookId, nextCursor);
+    persistCursor(webhookId, nextCursor);
   } catch (error: any) {
     logger.error(`Failed to process webhook payloads:`, error?.message);
   }

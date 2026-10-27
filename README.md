@@ -10,7 +10,7 @@
 
 **Production-grade Enterprise Architecture, Custom Extensions SDK, Metadata API DDL Migrations, Real-Time Webhook CDC Engine, and Model Context Protocol (MCP) Integration for Airtable.**
 
-[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Architecture](docs/ARCHITECTURE.md) • [Data Dictionary](docs/DATA_DICTIONARY.md) • [Data Governance](docs/DATA_GOVERNANCE.md) • [Scalability & Tuning](docs/SCALABILITY_TUNING.md) • [Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Interface Spec](docs/INTERFACES_SPEC.md) • [Formulas](docs/FORMULAS_MASTERCLASS.md)
+[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Principal Engineering Audit](docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md) • [Live Verification](docs/audits/AIRTABLE_LIVE_VERIFICATION.md) • [Security Audit](docs/security/SECURITY_AUDIT.md) • [Test Evidence](docs/audits/TEST_EVIDENCE.md) • [Architecture](docs/ARCHITECTURE.md) • [Data Dictionary](docs/DATA_DICTIONARY.md) • [Data Governance](docs/DATA_GOVERNANCE.md)
 
 </div>
 
@@ -184,13 +184,19 @@ npm run webhook:heartbeat
 # Build 2-way Relational Graph (Linked Records):
 npm run link
 
-# Create versioned JSON/NDJSON Disaster Recovery Snapshot:
+# Create versioned JSON/NDJSON Disaster Recovery Snapshot with SHA-256 manifest:
 npm run backup
+
+# Verify & Dry-Run Restore from Snapshot (zero remote mutations):
+npm run restore:dry -- -s backups/snapshot-<timestamp>
+
+# Execute Live Base Restore from Snapshot:
+npm run restore -- -s backups/snapshot-<timestamp>
 
 # Explore enterprise formulas:
 npm run formula
 
-# Audit base health & conventions:
+# Audit base health & live Metadata API schema:
 npm run audit
 ```
 
@@ -239,18 +245,37 @@ Airtable enforces a hard cap of **10 records per request**. The `AirtableBatchEn
 
 ---
 
-## 🧪 Testing
+## 🧪 Forensic Verification & Testing
 
-The repository includes a comprehensive unit and integration test suite:
+The repository has undergone a comprehensive Principal Engineering Audit (`docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md`) and is verified by a strict automated test suite covering security, rate limiting, disaster recovery, CDC, and data hygiene:
 
 ```bash
+# 1. Typecheck both Node/CLI & Custom React Blocks Extension:
+npm run typecheck
+
+# 2. Run automated test suite:
 npm test
 ```
 
+```text
+================================================================================
+Test Runner: Vitest v2.1.9 | Platform: Darwin arm64 (macOS)
+Files:       9 passed (9)
+Tests:       22 passed (22)
+Duration:    < 1.0s
+================================================================================
+ ✓ tests/dataLinter.test.ts (3)
+ ✓ tests/schemaDiff.test.ts (3)
+ ✓ tests/cdcDispatcher.test.ts (1)
+ ✓ tests/rateLimiter.test.ts (1)
+ ✓ tests/automations.test.ts (4)
+ ✓ tests/batchUpsert.test.ts (3)
+ ✓ tests/typedClient.test.ts (1)
+ ✓ tests/restore.test.ts (2)
+ ✓ tests/securityHMAC.test.ts (4)
 ```
-Test Files  4 passed (4)
-Tests       9 passed (9)
-```
+
+See [docs/audits/TEST_EVIDENCE.md](docs/audits/TEST_EVIDENCE.md) for full execution logs, failure injections, and security verification.
 
 ---
 

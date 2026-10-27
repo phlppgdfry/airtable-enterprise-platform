@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p extensions/enterprise-resource-matrix",
     "dev": "tsx src/cli/index.ts",
     "test": "vitest run",
     "lint": "eslint src/ --ext .ts,.tsx",
@@ -26,6 +27,8 @@
     "migrate:apply": "tsx src/cli/index.ts migrate apply",
     "webhook:heartbeat": "tsx src/cli/index.ts webhook:heartbeat",
     "backup": "tsx src/cli/index.ts backup",
+    "restore": "tsx src/cli/index.ts restore",
+    "restore:dry": "tsx src/cli/index.ts restore --dry-run",
     "provision": "tsx src/cli/index.ts provision",
     "link": "tsx src/cli/index.ts link",
     "formula": "tsx src/cli/index.ts formula",

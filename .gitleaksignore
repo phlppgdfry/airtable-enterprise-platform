@@ -7,3 +7,5 @@ src/client/metadataClient.ts:airtable-api-key:11
 src/cli/commands/provision.ts:airtable-api-key:37
 src/cli/commands/menu.ts:airtable-api-key:27
 src/client/typedClient.ts:airtable-api-key:9
+src/cli/commands/backup.ts:airtable-api-key:16
+docs/audits/TEST_EVIDENCE.md:airtable-api-key:134

@@ -24,7 +24,7 @@ export async function runInteractiveMenuCommand() {
     output: process.stdout,
   });
 
-  const baseId = process.env.AIRTABLE_BASE_ID || 'app03l5bkNRgzjWv4';
+  const baseId = process.env.AIRTABLE_BASE_ID || 'UNCONFIGURED (set AIRTABLE_BASE_ID in .env)';
 
   console.clear();
   console.log(chalk.cyan.bold('╔══════════════════════════════════════════════════════════════════════╗'));

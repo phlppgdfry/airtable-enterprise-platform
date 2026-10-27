@@ -22,8 +22,8 @@ import { AirtableMetadataClient } from '../../client/metadataClient.js';
 
 export async function runSeedCommand(options: { baseId?: string; dryRun?: boolean }) {
   const apiKey = process.env.AIRTABLE_API_KEY;
-  const baseId = options.baseId || process.env.AIRTABLE_BASE_ID || 'appEnterpriseShowcase01';
-  const workspaceId = process.env.AIRTABLE_WORKSPACE_ID || 'wsp3p16CPCotJVZdX';
+  const baseId = options.baseId || process.env.AIRTABLE_BASE_ID || 'base_unconfigured';
+  const workspaceId = process.env.AIRTABLE_WORKSPACE_ID || 'workspace_unconfigured';
 
   logger.section('Airtable Enterprise Provisioning & Seed Engine');
   logger.keyVal('Target Workspace', workspaceId);

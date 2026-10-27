@@ -21,6 +21,7 @@ import { runFormulaCommand } from './commands/formulaPlayground.js';
 import { runLinkRelationsCommand } from './commands/linkRelations.js';
 import { runDashboardCommand } from './commands/dashboard.js';
 import { runBackupCommand } from './commands/backup.js';
+import { runRestoreCommand } from './commands/restore.js';
 import { runMigrateCommand } from './commands/migrate.js';
 import { runDataLintCommand } from './commands/dataLint.js';
 import { runWebhookHeartbeat } from '../webhooks/heartbeat.js';
@@ -92,13 +93,21 @@ program
   .command('backup')
   .description('Export complete base snapshot with JSON/NDJSON and checksum manifest')
   .option('-o, --out-dir <outDir>', 'Output directory for snapshot files')
-  .action((options) => runBackupCommand(options));
+  .action(async (options) => { await runBackupCommand(options); });
+
+program
+  .command('restore')
+  .description('Restore base from snapshot with SHA-256 verification (supports --dry-run)')
+  .option('-s, --snapshot-dir <snapshotDir>', 'Path to snapshot directory containing manifest.json')
+  .option('-b, --base-id <baseId>', 'Target Airtable Base ID')
+  .option('--dry-run', 'Simulate restoration plan without modifying remote records', false)
+  .action(async (options) => { await runRestoreCommand(options); });
 
 program
   .command('provision')
   .description('Automatically create and seed the complete base in your workspace (POST /v0/meta/bases)')
   .option('-t, --token <token>', 'Airtable Personal Access Token (PAT)')
-  .option('-w, --workspace-id <workspaceId>', 'Target Workspace ID', 'wsp3p16CPCotJVZdX')
+  .option('-w, --workspace-id <workspaceId>', 'Target Workspace ID', process.env.AIRTABLE_WORKSPACE_ID)
   .option('-n, --base-name <baseName>', 'Base Name', 'Enterprise Operations Hub')
   .option('--no-open', 'Do not open browser automatically')
   .action((options) => runProvisionCommand(options));

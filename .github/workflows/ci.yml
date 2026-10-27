@@ -23,14 +23,18 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: TypeScript Type Check
-        run: npx tsc --noEmit
+      - name: TypeScript Type Check (Core CLI & Custom Extension)
+        run: npm run typecheck
 
-      - name: Run Test Suite
+      - name: Run Automated Test Suite
         run: npm test
 
-      - name: Test CLI Commands (Dry-Run)
+      - name: Test CLI Commands & Dry-Runs
         run: |
           npm run seed -- --dry-run
           npm run audit
           npm run schema:export
+          npm run data:lint
+          npm run backup
+          LATEST_BACKUP=$(ls -td backups/snapshot-* | head -1)
+          npm run restore:dry -- -s "$LATEST_BACKUP"

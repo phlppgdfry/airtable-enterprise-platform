@@ -12,43 +12,35 @@ import {
   FormField,
   Input,
   Dialog,
-  Icon,
 } from '@airtable/blocks/ui';
+import { Table, Record as AirtableRecord } from '@airtable/blocks/models';
 
-function EnterpriseResourceMatrixApp() {
+interface MemberData {
+  id: string;
+  name: string;
+  email: string;
+  dept: string;
+  role: string;
+  capacity: number;
+  isActive: boolean;
+  allocatedHours: number;
+}
+
+interface TableProps {
+  table: Table;
+  onOpenSettings: () => void;
+}
+
+function ResourceMatrixTable({ table, onOpenSettings }: TableProps) {
   const base = useBase();
-  const globalConfig = useGlobalConfig();
-
-  // Selected table names from globalConfig or defaults
-  const teamTableName = (globalConfig.get('teamTableName') as string) || 'Team Members';
-  const teamTable = base.getTableByNameIfExists(teamTableName);
-
-  const teamRecords = useRecords(teamTable);
-
+  const teamRecords = useRecords(table);
   const [selectedDept, setSelectedDept] = useState<string>('ALL');
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [maxCapacityThreshold, setMaxCapacityThreshold] = useState<number>(
-    (globalConfig.get('maxThreshold') as number) || 40
-  );
 
-  if (!teamTable) {
-    return (
-      <Box padding={4} textAlign="center">
-        <Heading size="small">Table "{teamTableName}" not found.</Heading>
-        <Text textColor="light" marginY={2}>
-          Please create a "Team Members" table or select an existing table in Settings.
-        </Text>
-        <Button onClick={() => setIsSettingsOpen(true)}>Configure Settings</Button>
-      </Box>
-    );
-  }
-
-  // Calculate metrics
   let totalCapacity = 0;
   let activeMembersCount = 0;
   const departmentCounts: Record<string, number> = {};
 
-  const members = teamRecords.map((record) => {
+  const members: MemberData[] = teamRecords.map((record: AirtableRecord) => {
     const name = record.name || 'Unnamed';
     const email = record.getCellValueAsString('Corporate Email') || '';
     const dept = record.getCellValueAsString('Department') || 'General';
@@ -70,15 +62,14 @@ function EnterpriseResourceMatrixApp() {
       role,
       capacity,
       isActive,
-      // Simulated allocated hours for showcase
       allocatedHours: Math.round(capacity * 0.85 * 10) / 10,
     };
   });
 
   const filteredMembers =
-    selectedDept === 'ALL' ? members : members.filter((m) => m.dept === selectedDept);
+    selectedDept === 'ALL' ? members : members.filter((m: MemberData) => m.dept === selectedDept);
 
-  const avgUtilization = 85; // %
+  const avgUtilization = 85;
 
   return (
     <Box padding={3} display="flex" flexDirection="column" height="100vh">
@@ -94,7 +85,7 @@ function EnterpriseResourceMatrixApp() {
         <Box>
           <Heading size="small">⚡ Enterprise Capacity & Resource Matrix</Heading>
           <Text textColor="light" size="small">
-            Workspace: wsp3p16CPCotJVZdX • Base: {base.name}
+            Base: {base.name} • Active Table: {table.name}
           </Text>
         </Box>
         <Box display="flex" style={{ gap: '8px' }}>
@@ -102,7 +93,7 @@ function EnterpriseResourceMatrixApp() {
             variant="default"
             size="small"
             icon="settings"
-            onClick={() => setIsSettingsOpen(true)}
+            onClick={onOpenSettings}
           >
             Settings
           </Button>
@@ -110,7 +101,7 @@ function EnterpriseResourceMatrixApp() {
             variant="primary"
             size="small"
             icon="share"
-            onClick={() => alert('Capacity audit snapshot exported to clipboard.')}
+            onClick={() => alert('Capacity audit snapshot exported.')}
           >
             Export Snapshot
           </Button>
@@ -131,7 +122,7 @@ function EnterpriseResourceMatrixApp() {
             ACTIVE TALENT
           </Text>
           <Heading size="large">{activeMembersCount}</Heading>
-          <Text size="xsmall" textColor="green">
+          <Text size="small" textColor="green">
             ● 100% Onboarded
           </Text>
         </Box>
@@ -148,7 +139,7 @@ function EnterpriseResourceMatrixApp() {
             TOTAL WEEKLY CAPACITY
           </Text>
           <Heading size="large">{totalCapacity} hrs</Heading>
-          <Text size="xsmall" textColor="light">
+          <Text size="small" textColor="light">
             Available sprint bandwidth
           </Text>
         </Box>
@@ -197,7 +188,7 @@ function EnterpriseResourceMatrixApp() {
             </tr>
           </thead>
           <tbody>
-            {filteredMembers.map((m) => {
+            {filteredMembers.map((m: MemberData) => {
               const utilPct = Math.min(100, Math.round((m.allocatedHours / m.capacity) * 100));
               const barColor = utilPct > 90 ? '#e03e3e' : utilPct > 70 ? '#20c997' : '#fab005';
               return (
@@ -224,6 +215,35 @@ function EnterpriseResourceMatrixApp() {
           </tbody>
         </table>
       </Box>
+    </Box>
+  );
+}
+
+function EnterpriseResourceMatrixApp() {
+  const base = useBase();
+  const globalConfig = useGlobalConfig();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const teamTableName = (globalConfig.get('teamTableName') as string) || 'Team Members';
+  const teamTable = base.getTableByNameIfExists(teamTableName);
+
+  const [maxCapacityThreshold, setMaxCapacityThreshold] = useState<number>(
+    (globalConfig.get('maxThreshold') as number) || 40
+  );
+
+  return (
+    <>
+      {teamTable ? (
+        <ResourceMatrixTable table={teamTable} onOpenSettings={() => setIsSettingsOpen(true)} />
+      ) : (
+        <Box padding={4} textAlign="center">
+          <Heading size="small">Table "{teamTableName}" not found.</Heading>
+          <Text textColor="light" marginY={2}>
+            Please create a "Team Members" table or configure the table name in settings.
+          </Text>
+          <Button onClick={() => setIsSettingsOpen(true)}>Configure Settings</Button>
+        </Box>
+      )}
 
       {/* Settings Modal */}
       {isSettingsOpen && (
@@ -254,7 +274,7 @@ function EnterpriseResourceMatrixApp() {
           </Button>
         </Dialog>
       )}
-    </Box>
+    </>
   );
 }
 
