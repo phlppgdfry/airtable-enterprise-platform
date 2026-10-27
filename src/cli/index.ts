@@ -25,6 +25,8 @@ import { runMigrateCommand } from './commands/migrate.js';
 import { runDataLintCommand } from './commands/dataLint.js';
 import { runWebhookHeartbeat } from '../webhooks/heartbeat.js';
 import { runQueryCommand } from './commands/query.js';
+import { runDocsGenerateCommand } from './commands/docsGenerate.js';
+import { runWebhookSimulateCommand } from './commands/webhookSimulate.js';
 
 dotenv.config();
 
@@ -34,6 +36,16 @@ program
   .name('airtable-toolkit')
   .description('Airtable Enterprise Engineering CLI — Extensions, Metadata API, Webhooks & Migrations')
   .version('1.0.0');
+
+program
+  .command('docs:generate')
+  .description('Generate Markdown Data Dictionary (SSOT) from live base schema')
+  .action(() => runDocsGenerateCommand());
+
+program
+  .command('webhook:simulate')
+  .description('Simulate end-to-end Change Data Capture (CDC) and persist event to live Audit Log')
+  .action(() => runWebhookSimulateCommand());
 
 program
   .command('migrate <action>')
