@@ -27,6 +27,8 @@ import { runWebhookHeartbeat } from '../webhooks/heartbeat.js';
 import { runQueryCommand } from './commands/query.js';
 import { runDocsGenerateCommand } from './commands/docsGenerate.js';
 import { runWebhookSimulateCommand } from './commands/webhookSimulate.js';
+import { runInteractiveMenuCommand } from './commands/menu.js';
+import { runAICopilotCommand } from './commands/aiCopilot.js';
 
 dotenv.config();
 
@@ -36,6 +38,16 @@ program
   .name('airtable-toolkit')
   .description('Airtable Enterprise Engineering CLI — Extensions, Metadata API, Webhooks & Migrations')
   .version('1.0.0');
+
+program
+  .command('menu')
+  .description('Launch interactive terminal Control Plane & navigation menu')
+  .action(() => runInteractiveMenuCommand());
+
+program
+  .command('ai:ask [question...]')
+  .description('Ask natural language questions to the Airtable AI Copilot')
+  .action((args) => runAICopilotCommand(args ? args.join(' ') : undefined));
 
 program
   .command('docs:generate')

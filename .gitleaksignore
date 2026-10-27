@@ -5,3 +5,5 @@ README.md:airtable-api-key:151
 src/cli/commands/seed.ts:airtable-api-key:26
 src/client/metadataClient.ts:airtable-api-key:11
 src/cli/commands/provision.ts:airtable-api-key:37
+src/cli/commands/menu.ts:airtable-api-key:27
+src/client/typedClient.ts:airtable-api-key:9

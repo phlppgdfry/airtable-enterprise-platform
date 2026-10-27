@@ -10,7 +10,7 @@
 
 **Production-grade Enterprise Architecture, Custom Extensions SDK, Metadata API DDL Migrations, Real-Time Webhook CDC Engine, and Model Context Protocol (MCP) Integration for Airtable.**
 
-[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Architecture](docs/ARCHITECTURE.md) • [Data Governance](docs/DATA_GOVERNANCE.md) • [Scalability & Tuning](docs/SCALABILITY_TUNING.md) • [Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Interface Spec](docs/INTERFACES_SPEC.md) • [Formulas](docs/FORMULAS_MASTERCLASS.md)
+[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Architecture](docs/ARCHITECTURE.md) • [Data Dictionary](docs/DATA_DICTIONARY.md) • [Data Governance](docs/DATA_GOVERNANCE.md) • [Scalability & Tuning](docs/SCALABILITY_TUNING.md) • [Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Interface Spec](docs/INTERFACES_SPEC.md) • [Formulas](docs/FORMULAS_MASTERCLASS.md)
 
 </div>
 
@@ -153,6 +153,12 @@ AIRTABLE_WORKSPACE_ID=wsp3p16CPCotJVZdX
 
 ### 4. Enterprise CLI Suite
 ```bash
+# Interactive Terminal Control Plane & Menu:
+npm run menu
+
+# Real-time Natural Language AI Copilot:
+npm run ai:ask -- "Wat is onze totale capaciteit en zijn er overschrijdingen?"
+
 # Real-time Executive Terminal Dashboard:
 npm run dashboard
 
@@ -166,6 +172,12 @@ npm run migrate:apply
 # Interactive Terminal Query Engine:
 npm run query -- --table Projects --filter "{Status} = 'Execution'"
 
+# Generate Enterprise Data Dictionary (Markdown SSOT):
+npm run docs:generate
+
+# Simulate End-to-End Webhook CDC Pipeline:
+npm run webhook:simulate
+
 # Proactive Webhook Heartbeat (auto-refreshes TTL < 72h):
 npm run webhook:heartbeat
 
@@ -174,9 +186,6 @@ npm run link
 
 # Create versioned JSON/NDJSON Disaster Recovery Snapshot:
 npm run backup
-
-# Introspect schema and export TypeScript definitions:
-npm run schema:export
 
 # Explore enterprise formulas:
 npm run formula
