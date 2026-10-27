@@ -48,7 +48,8 @@ program
 program
   .command('ai:ask [question...]')
   .description('Ask natural language questions to the Airtable AI Copilot')
-  .action((args) => runAICopilotCommand(args ? args.join(' ') : undefined));
+  .option('--llm', 'Route to real LLM agent (requires OPENAI_API_KEY)', false)
+  .action((args, options) => runAICopilotCommand(args ? args.join(' ') : undefined, options));
 
 program
   .command('docs:generate')

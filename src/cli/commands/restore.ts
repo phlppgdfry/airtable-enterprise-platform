@@ -21,6 +21,21 @@ export interface RestoreOptions {
   dryRun?: boolean;
 }
 
+// Set of read-only computed field types that Airtable API forbids mutating
+export const READ_ONLY_FIELD_TYPES = new Set([
+  'formula',
+  'rollup',
+  'lookup',
+  'multipleLookupValues',
+  'createdTime',
+  'lastModifiedTime',
+  'createdBy',
+  'lastModifiedBy',
+  'count',
+  'button',
+  'autoNumber',
+]);
+
 export const NATURAL_KEYS: Record<string, string[]> = {
   'Projects': ['Project Code'],
   'Team Members': ['Corporate Email'],
@@ -28,6 +43,38 @@ export const NATURAL_KEYS: Record<string, string[]> = {
   'Risk & Governance Log': ['Risk ID'],
   'Audit Trail & CDC Logs': ['Event ID'],
 };
+
+/**
+ * Filter record fields to only writable fields according to table schema
+ */
+export function sanitizeRecordForRestore(
+  rawFields: Record<string, any>,
+  tableSchema?: { fields: Array<{ name: string; type: string }> }
+): Record<string, any> {
+  const sanitized: Record<string, any> = {};
+  const schemaMap = new Map<string, string>();
+
+  if (tableSchema) {
+    for (const f of tableSchema.fields) {
+      schemaMap.set(f.name, f.type);
+    }
+  }
+
+  for (const [key, value] of Object.entries(rawFields)) {
+    const fieldType = schemaMap.get(key);
+    // Skip if field is known to be computed/read-only
+    if (fieldType && READ_ONLY_FIELD_TYPES.has(fieldType)) {
+      continue;
+    }
+    // Also skip internal Airtable metadata keys
+    if (key.startsWith('__')) {
+      continue;
+    }
+    sanitized[key] = value;
+  }
+
+  return sanitized;
+}
 
 export async function runRestoreCommand(options: RestoreOptions) {
   const apiKey = process.env.AIRTABLE_API_KEY;
@@ -111,6 +158,8 @@ export async function runRestoreCommand(options: RestoreOptions) {
   const schema = await metaClient.getBaseSchema(baseId);
   const targetTables = new Set(schema.tables.map((t) => t.name));
 
+  const tableSchemaMap = new Map(schema.tables.map((t) => [t.name, t]));
+
   for (const [tableName, meta] of Object.entries<any>(manifest.tables)) {
     if (!targetTables.has(tableName)) {
       logger.warn(`Target table [${tableName}] does not exist in base. Skipping.`);
@@ -118,14 +167,25 @@ export async function runRestoreCommand(options: RestoreOptions) {
     }
 
     const jsonPath = path.join(snapshotDir, meta.jsonFile);
-    const records = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+    const rawRecords: any[] = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+    const tableSchema = tableSchemaMap.get(tableName);
     const keys = NATURAL_KEYS[tableName] || ['id'];
 
-    logger.info(`Restoring [${tableName}] (${records.length} records)...`);
-    const result = await batchEngine.batchUpsert(tableName, records, keys, true);
-    logger.success(
-      `Restored [${tableName}]: ${result.createdRecords.length} created, ${result.updatedRecords.length} updated.`
-    );
+    // Sanitize records to strip computed/read-only fields (formulas, lookups, rollups)
+    const sanitizedRecords = rawRecords.map((r) => ({
+      fields: sanitizeRecordForRestore(r.fields, tableSchema),
+    }));
+
+    logger.info(`Restoring [${tableName}] (${sanitizedRecords.length} records)...`);
+    try {
+      const result = await batchEngine.batchUpsert(tableName, sanitizedRecords, keys, true);
+      logger.success(
+        `Restored [${tableName}]: ${result.createdRecords.length} created, ${result.updatedRecords.length} updated.`
+      );
+    } catch (err: any) {
+      logger.error(`Failed to restore table [${tableName}]: ${err.message}`);
+      // Partial failure recovery: continue with remaining tables
+    }
   }
 
   // 4. Log event to Audit Trail

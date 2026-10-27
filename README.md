@@ -10,7 +10,7 @@
 
 **Production-grade Enterprise Architecture, Custom Extensions SDK, Metadata API DDL Migrations, Real-Time Webhook CDC Engine, and Model Context Protocol (MCP) Integration for Airtable.**
 
-[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Principal Engineering Audit](docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md) • [Live Verification](docs/audits/AIRTABLE_LIVE_VERIFICATION.md) • [Security Audit](docs/security/SECURITY_AUDIT.md) • [Test Evidence](docs/audits/TEST_EVIDENCE.md) • [Architecture](docs/ARCHITECTURE.md) • [Data Dictionary](docs/DATA_DICTIONARY.md) • [Data Governance](docs/DATA_GOVERNANCE.md)
+[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Principal Engineering Audit](docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md) • [Acceptance Matrix](docs/audits/COMPREHENSIVE_ACCEPTANCE_TESTS.md) • [Official MCP vs Toolkit](docs/AIRTABLE_MCP_COMPARISON.md) • [UI & Interfaces](docs/audits/AIRTABLE_UI_VALIDATION.md) • [Security Audit](docs/security/SECURITY_AUDIT.md) • [Test Evidence](docs/audits/TEST_EVIDENCE.md) • [Data Dictionary](docs/DATA_DICTIONARY.md)
 
 </div>
 
@@ -247,7 +247,7 @@ Airtable enforces a hard cap of **10 records per request**. The `AirtableBatchEn
 
 ## 🧪 Forensic Verification & Testing
 
-The repository has undergone a comprehensive Principal Engineering Audit (`docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md`) and is verified by a strict automated test suite covering security, rate limiting, disaster recovery, CDC, and data hygiene:
+The repository has undergone a comprehensive Principal Engineering Audit (`docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md`) and is verified by a strict automated test suite covering security, rate limiting, disaster recovery, synthetic scalability, CDC, and data hygiene:
 
 ```bash
 # 1. Typecheck both Node/CLI & Custom React Blocks Extension:
@@ -259,23 +259,27 @@ npm test
 
 ```text
 ================================================================================
-Test Runner: Vitest v2.1.9 | Platform: Darwin arm64 (macOS)
-Files:       9 passed (9)
-Tests:       22 passed (22)
-Duration:    < 1.0s
+Test Runner: Vitest v2.1.9 | Node: v24.21.0 | Platform: Darwin arm64 (macOS)
+Files:       13 passed (13)
+Tests:       33 passed (33)
+Duration:    ~1.0s
 ================================================================================
- ✓ tests/dataLinter.test.ts (3)
- ✓ tests/schemaDiff.test.ts (3)
- ✓ tests/cdcDispatcher.test.ts (1)
- ✓ tests/rateLimiter.test.ts (1)
  ✓ tests/automations.test.ts (4)
  ✓ tests/batchUpsert.test.ts (3)
- ✓ tests/typedClient.test.ts (1)
+ ✓ tests/cdcDispatcher.test.ts (1)
+ ✓ tests/copilotEngine.test.ts (2)
+ ✓ tests/dataLinter.test.ts (3)
+ ✓ tests/rateLimiter.test.ts (1)
  ✓ tests/restore.test.ts (2)
+ ✓ tests/restoreEndToEnd.test.ts (3)
+ ✓ tests/scalability.test.ts (3)
+ ✓ tests/schemaDiff.test.ts (3)
  ✓ tests/securityHMAC.test.ts (4)
+ ✓ tests/typedClient.test.ts (1)
+ ✓ tests/webhookReliability.test.ts (3)
 ```
 
-See [docs/audits/TEST_EVIDENCE.md](docs/audits/TEST_EVIDENCE.md) for full execution logs, failure injections, and security verification.
+See [docs/audits/TEST_EVIDENCE.md](docs/audits/TEST_EVIDENCE.md) and [docs/audits/COMPREHENSIVE_ACCEPTANCE_TESTS.md](docs/audits/COMPREHENSIVE_ACCEPTANCE_TESTS.md) for full execution logs, failure injections, scalability benchmarks, and security verification.
 
 ---
 

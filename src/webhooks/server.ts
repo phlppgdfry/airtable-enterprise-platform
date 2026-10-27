@@ -31,7 +31,10 @@ export const cdcDispatcher = new CDCEventDispatcher();
 
 // Persistent Cursor Store (backed by JSON file for restart resilience)
 const cursorFilePath = path.resolve(process.cwd(), '.webhook_cursors.json');
-const cursorStore = new Map<string, number>();
+export const cursorStore = new Map<string, number>();
+
+// Concurrency lock: prevents parallel polling races on the same webhook subscription
+const activePollingLocks = new Set<string>();
 
 // Load persisted cursors on startup
 if (fs.existsSync(cursorFilePath)) {
@@ -129,6 +132,24 @@ app.post('/api/webhooks/airtable', async (req: Request, res: Response) => {
 
   logger.info(`Received Webhook Ping from Base: ${baseId}, Webhook: ${webhookId}`);
 
+  // Replay Attack Defense: reject pings older than 5 minutes (300,000ms)
+  if (ping.timestamp) {
+    const pingTime = new Date(ping.timestamp).getTime();
+    const ageMs = Math.abs(Date.now() - pingTime);
+    if (ageMs > 300000) {
+      logger.warn(`Stale webhook ping rejected (age: ${Math.round(ageMs / 1000)}s > 300s tolerance). Potential replay.`);
+      return;
+    }
+  }
+
+  // Concurrency Gate: prevent parallel polling races on the same cursor
+  if (activePollingLocks.has(webhookId)) {
+    logger.info(`Payload polling already in-flight for webhook ${webhookId}. Skipping redundant dispatch.`);
+    return;
+  }
+
+  activePollingLocks.add(webhookId);
+
   // Background payload extraction
   try {
     const currentCursor = cursorStore.get(webhookId) ?? 1;
@@ -151,6 +172,8 @@ app.post('/api/webhooks/airtable', async (req: Request, res: Response) => {
     persistCursor(webhookId, nextCursor);
   } catch (error: any) {
     logger.error(`Failed to process webhook payloads:`, error?.message);
+  } finally {
+    activePollingLocks.delete(webhookId);
   }
 });
 
