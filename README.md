@@ -10,7 +10,7 @@
 
 **Production-grade Enterprise Architecture, Custom Extensions SDK, Metadata API DDL Migrations, Real-Time Webhook CDC Engine, and Model Context Protocol (MCP) Integration for Airtable.**
 
-[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Architecture](docs/ARCHITECTURE.md) • [14-Day Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Interface Designer Spec](docs/INTERFACES_SPEC.md) • [Formula Masterclass](docs/FORMULAS_MASTERCLASS.md) • [Webhooks & CDC](docs/WEBHOOKS_CDC_GUIDE.md)
+[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Architecture](docs/ARCHITECTURE.md) • [Data Governance](docs/DATA_GOVERNANCE.md) • [Scalability & Tuning](docs/SCALABILITY_TUNING.md) • [Trial Blueprint](docs/WORKSPACE_TRIAL_BLUEPRINT.md) • [Interface Spec](docs/INTERFACES_SPEC.md) • [Formulas](docs/FORMULAS_MASTERCLASS.md)
 
 </div>
 
@@ -156,6 +156,19 @@ AIRTABLE_WORKSPACE_ID=wsp3p16CPCotJVZdX
 # Real-time Executive Terminal Dashboard:
 npm run dashboard
 
+# Enterprise Data Governance & Anomaly Detection Linter:
+npm run data:lint
+
+# Declarative Schema Migration (Plan & Apply):
+npm run migrate:plan
+npm run migrate:apply
+
+# Interactive Terminal Query Engine:
+npm run query -- --table Projects --filter "{Status} = 'Execution'"
+
+# Proactive Webhook Heartbeat (auto-refreshes TTL < 72h):
+npm run webhook:heartbeat
+
 # Build 2-way Relational Graph (Linked Records):
 npm run link
 
@@ -170,9 +183,6 @@ npm run formula
 
 # Audit base health & conventions:
 npm run audit
-
-# Automated base provisioning into target workspace:
-npm run provision
 ```
 
 ### 5. Alternative: Instant CSV Import (No Token Required!)

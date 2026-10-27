@@ -17,3 +17,6 @@ export * from './automations/recursive-rollup-hierarchy.js';
 export * from './automations/deduplication-fuzzy-match.js';
 export * from './automations/cross-base-dynamic-sync.js';
 export * from './automations/ai-field-enrichment.js';
+export * from './migrations/schemaDiff.js';
+export * from './quality/dataLinter.js';
+export * from './webhooks/heartbeat.js';

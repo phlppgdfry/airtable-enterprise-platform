@@ -21,6 +21,10 @@ import { runFormulaCommand } from './commands/formulaPlayground.js';
 import { runLinkRelationsCommand } from './commands/linkRelations.js';
 import { runDashboardCommand } from './commands/dashboard.js';
 import { runBackupCommand } from './commands/backup.js';
+import { runMigrateCommand } from './commands/migrate.js';
+import { runDataLintCommand } from './commands/dataLint.js';
+import { runWebhookHeartbeat } from '../webhooks/heartbeat.js';
+import { runQueryCommand } from './commands/query.js';
 
 dotenv.config();
 
@@ -30,6 +34,30 @@ program
   .name('airtable-toolkit')
   .description('Airtable Enterprise Engineering CLI — Extensions, Metadata API, Webhooks & Migrations')
   .version('1.0.0');
+
+program
+  .command('migrate <action>')
+  .description('Declarative schema migration: plan | apply')
+  .option('-b, --base-id <baseId>', 'Target Airtable Base ID')
+  .action((action, options) => runMigrateCommand(action as any, options));
+
+program
+  .command('data:lint')
+  .description('Audit base data against enterprise hygiene & anomaly detection rules')
+  .action(() => runDataLintCommand());
+
+program
+  .command('webhook:heartbeat')
+  .description('Check all webhooks and proactively refresh TTL (<72h remaining)')
+  .action(() => runWebhookHeartbeat());
+
+program
+  .command('query')
+  .description('Query records from any base table with formula filtering')
+  .option('-t, --table <tableName>', 'Table name to query', 'Projects')
+  .option('-f, --filter <formula>', 'filterByFormula expression')
+  .option('-l, --limit <limit>', 'Maximum records to return', (v) => parseInt(v, 10), 10)
+  .action((options) => runQueryCommand(options));
 
 program
   .command('dashboard')
