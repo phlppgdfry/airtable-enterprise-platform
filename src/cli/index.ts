@@ -30,6 +30,7 @@ import { runDocsGenerateCommand } from './commands/docsGenerate.js';
 import { runWebhookSimulateCommand } from './commands/webhookSimulate.js';
 import { runInteractiveMenuCommand } from './commands/menu.js';
 import { runAICopilotCommand } from './commands/aiCopilot.js';
+import { runWorkflowDemoCommand } from './commands/workflowDemo.js';
 
 dotenv.config();
 
@@ -50,6 +51,13 @@ program
   .description('Ask natural language questions to the Airtable AI Copilot')
   .option('--llm', 'Route to real LLM agent (requires OPENAI_API_KEY)', false)
   .action((args, options) => runAICopilotCommand(args ? args.join(' ') : undefined, options));
+
+program
+  .command('demo:workflow')
+  .description('Execute end-to-end 10-step enterprise workflow lifecycle demonstration')
+  .option('--dry-run', 'Simulate mutations without altering live base data', false)
+  .option('-b, --base-id <baseId>', 'Target Airtable Base ID')
+  .action((options) => runWorkflowDemoCommand(options));
 
 program
   .command('docs:generate')

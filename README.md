@@ -10,7 +10,7 @@
 
 **Production-grade Enterprise Architecture, Custom Extensions SDK, Metadata API DDL Migrations, Real-Time Webhook CDC Engine, and Model Context Protocol (MCP) Integration for Airtable.**
 
-[Workspace Target](https://airtable.com/workspaces/wsp3p16CPCotJVZdX) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [Principal Engineering Audit](docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md) • [Acceptance Matrix](docs/audits/COMPREHENSIVE_ACCEPTANCE_TESTS.md) • [Official MCP vs Toolkit](docs/AIRTABLE_MCP_COMPARISON.md) • [UI & Interfaces](docs/audits/AIRTABLE_UI_VALIDATION.md) • [Security Audit](docs/security/SECURITY_AUDIT.md) • [Test Evidence](docs/audits/TEST_EVIDENCE.md) • [Data Dictionary](docs/DATA_DICTIONARY.md)
+[Live Showcase (Web)](https://phlppgdfry.github.io/airtable-enterprise-platform/) • [Live Base](https://airtable.com/app03l5bkNRgzjWv4) • [DR Verified Base](https://airtable.com/apptrO58u4sFs4W6K) • [Acceptance Matrix](docs/audits/RELEASE_ACCEPTANCE_MATRIX.md) • [DR Report](docs/audits/DISASTER_RECOVERY_VERIFICATION_REPORT.md) • [Webhook Report](docs/audits/WEBHOOK_RELIABILITY_REPORT.md) • [Principal Audit](docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md) • [MCP vs Toolkit](docs/AIRTABLE_MCP_COMPARISON.md) • [UI & Interfaces](docs/audits/AIRTABLE_UI_VALIDATION.md) • [Security Audit](docs/security/SECURITY_AUDIT.md) • [Data Dictionary](docs/DATA_DICTIONARY.md)
 
 </div>
 
@@ -156,6 +156,9 @@ AIRTABLE_WORKSPACE_ID=wsp3p16CPCotJVZdX
 # Interactive Terminal Control Plane & Menu:
 npm run menu
 
+# Complete 10-Step Operational Workflow (Live E2E Demo):
+npm run demo:workflow
+
 # Real-time Natural Language AI Copilot:
 npm run ai:ask -- "Wat is onze totale capaciteit en zijn er overschrijdingen?"
 
@@ -260,14 +263,15 @@ npm test
 ```text
 ================================================================================
 Test Runner: Vitest v2.1.9 | Node: v24.21.0 | Platform: Darwin arm64 (macOS)
-Files:       13 passed (13)
-Tests:       33 passed (33)
-Duration:    ~1.0s
+Files:       14 passed (14)
+Tests:       37 passed (37)
+Duration:    ~1.1s
 ================================================================================
  ✓ tests/automations.test.ts (4)
  ✓ tests/batchUpsert.test.ts (3)
  ✓ tests/cdcDispatcher.test.ts (1)
  ✓ tests/copilotEngine.test.ts (2)
+ ✓ tests/copilotStress.test.ts (4)
  ✓ tests/dataLinter.test.ts (3)
  ✓ tests/rateLimiter.test.ts (1)
  ✓ tests/restore.test.ts (2)
@@ -279,7 +283,7 @@ Duration:    ~1.0s
  ✓ tests/webhookReliability.test.ts (3)
 ```
 
-See [docs/audits/TEST_EVIDENCE.md](docs/audits/TEST_EVIDENCE.md) and [docs/audits/COMPREHENSIVE_ACCEPTANCE_TESTS.md](docs/audits/COMPREHENSIVE_ACCEPTANCE_TESTS.md) for full execution logs, failure injections, scalability benchmarks, and security verification.
+See [docs/audits/RELEASE_ACCEPTANCE_MATRIX.md](docs/audits/RELEASE_ACCEPTANCE_MATRIX.md), [docs/audits/DISASTER_RECOVERY_VERIFICATION_REPORT.md](docs/audits/DISASTER_RECOVERY_VERIFICATION_REPORT.md), [docs/audits/WEBHOOK_RELIABILITY_REPORT.md](docs/audits/WEBHOOK_RELIABILITY_REPORT.md), and [docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md](docs/audits/PRINCIPAL_ENGINEERING_AUDIT.md) for full execution logs, failure injections, cloud disaster recovery runs, and verification evidence.
 
 ---
 

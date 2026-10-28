@@ -79,6 +79,18 @@ export class EnterpriseTypedClient {
     listInFlight: async (): Promise<AirtableRecordTasksDeliverables[]> => {
       return this.tasks.list(`OR({Workflow Stage} = 'In Progress', {Workflow Stage} = 'Code Review')`);
     },
+    create: async (fields: Record<string, any>): Promise<AirtableRecordTasksDeliverables> => {
+      const res = await this.rateLimiter.execute(() =>
+        this.client.post('/Tasks%20%26%20Deliverables', { fields })
+      );
+      return res.data;
+    },
+    update: async (recordId: string, fields: Record<string, any>): Promise<AirtableRecordTasksDeliverables> => {
+      const res = await this.rateLimiter.execute(() =>
+        this.client.patch(`/Tasks%20%26%20Deliverables/${recordId}`, { fields })
+      );
+      return res.data;
+    },
   };
 
   // --- Risk & Governance Repository ---
@@ -97,6 +109,18 @@ export class EnterpriseTypedClient {
       );
       return res.data.records;
     },
+    create: async (fields: Record<string, any>): Promise<AirtableRecordRiskGovernanceLog> => {
+      const res = await this.rateLimiter.execute(() =>
+        this.client.post('/Risk%20%26%20Governance%20Log', { fields })
+      );
+      return res.data;
+    },
+    update: async (recordId: string, fields: Record<string, any>): Promise<AirtableRecordRiskGovernanceLog> => {
+      const res = await this.rateLimiter.execute(() =>
+        this.client.patch(`/Risk%20%26%20Governance%20Log/${recordId}`, { fields })
+      );
+      return res.data;
+    },
   };
 
   // --- Audit Trail Repository ---
@@ -106,6 +130,12 @@ export class EnterpriseTypedClient {
         this.client.get(`/Audit%20Trail%20%26%20CDC%20Logs?maxRecords=${limit}`)
       );
       return res.data.records;
+    },
+    create: async (fields: Record<string, any>): Promise<AirtableRecordAuditTrailCDCLogs> => {
+      const res = await this.rateLimiter.execute(() =>
+        this.client.post('/Audit%20Trail%20%26%20CDC%20Logs', { fields })
+      );
+      return res.data;
     },
   };
 }

@@ -45,11 +45,13 @@ export const NATURAL_KEYS: Record<string, string[]> = {
 };
 
 /**
- * Filter record fields to only writable fields according to table schema
+ * Filter record fields to only writable fields according to table schema.
+ * If stripLinks is true, multipleRecordLinks fields are excluded for Pass 1 entity restoration.
  */
 export function sanitizeRecordForRestore(
   rawFields: Record<string, any>,
-  tableSchema?: { fields: Array<{ name: string; type: string }> }
+  tableSchema?: { fields: Array<{ name: string; type: string }> },
+  stripLinks: boolean = false
 ): Record<string, any> {
   const sanitized: Record<string, any> = {};
   const schemaMap = new Map<string, string>();
@@ -61,9 +63,21 @@ export function sanitizeRecordForRestore(
   }
 
   for (const [key, value] of Object.entries(rawFields)) {
+    // If target table schema is provided, the field MUST exist on the target table
+    if (tableSchema && !schemaMap.has(key)) {
+      continue;
+    }
     const fieldType = schemaMap.get(key);
     // Skip if field is known to be computed/read-only
     if (fieldType && READ_ONLY_FIELD_TYPES.has(fieldType)) {
+      continue;
+    }
+    // Skip relational links in Pass 1 to prevent foreign key mismatch across bases
+    if (stripLinks && fieldType === 'multipleRecordLinks') {
+      continue;
+    }
+    // Skip arrays containing foreign record IDs in Pass 1
+    if (stripLinks && Array.isArray(value) && value.length > 0 && typeof value[0] === 'string' && value[0].startsWith('rec')) {
       continue;
     }
     // Also skip internal Airtable metadata keys

@@ -18,6 +18,7 @@
     "cli": "tsx src/cli/index.ts",
     "menu": "tsx src/cli/index.ts menu",
     "ai:ask": "tsx src/cli/index.ts ai:ask",
+    "demo:workflow": "tsx src/cli/index.ts demo:workflow",
     "docs:generate": "tsx src/cli/index.ts docs:generate",
     "webhook:simulate": "tsx src/cli/index.ts webhook:simulate",
     "dashboard": "tsx src/cli/index.ts dashboard",

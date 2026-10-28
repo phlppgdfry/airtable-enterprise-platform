@@ -66,9 +66,9 @@ export class EnterpriseCopilotEngine {
 
     // 1. Team Member Lookup
     const matchedMember = team.find((m) => {
-      const name = (m.fields['Full Name'] || '').toLowerCase();
-      const first = name.split(' ')[0];
-      return queryLower.includes(name) || queryLower.includes(first);
+      const name = (m.fields['Full Name'] || '').toLowerCase().trim();
+      const first = name.split(' ')[0] || '';
+      return (name.length > 0 && queryLower.includes(name)) || (first.length > 2 && queryLower.includes(first));
     });
 
     if (matchedMember) {
@@ -97,9 +97,9 @@ export class EnterpriseCopilotEngine {
 
     // 2. Project Lookup
     const matchedProject = projects.find((p) => {
-      const code = (p.fields['Project Code'] || '').toLowerCase();
-      const name = (p.fields['Project Name'] || '').toLowerCase();
-      return queryLower.includes(code) || (name.length > 5 && queryLower.includes(name.slice(0, 15)));
+      const code = (p.fields['Project Code'] || '').toLowerCase().trim();
+      const name = (p.fields['Project Name'] || '').toLowerCase().trim();
+      return (code.length > 0 && queryLower.includes(code)) || (name.length > 5 && queryLower.includes(name.slice(0, 15)));
     });
 
     if (matchedProject) {
