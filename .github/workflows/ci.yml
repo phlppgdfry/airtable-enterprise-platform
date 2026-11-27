@@ -23,6 +23,8 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - name: Pin npm to 11 (Dependabot writes npm-11 lockfiles)
+        run: npm install -g npm@^11
       - name: Install Dependencies
         run: npm ci
 
