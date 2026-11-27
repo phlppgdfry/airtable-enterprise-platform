@@ -18,6 +18,7 @@ import { AirtableMetadataClient } from '../client/metadataClient.js';
 import { CDCEventDispatcher } from './cdcDispatcher.js';
 import { logger } from '../cli/utils/logger.js';
 import { AirtableWebhookPing } from './types.js';
+import { isAirtableId } from '../client/airtableIds.js';
 
 dotenv.config();
 
@@ -125,7 +126,7 @@ app.post('/api/webhooks/airtable', async (req: Request, res: Response) => {
   const baseId = ping.base?.id;
   const webhookId = ping.webhook?.id;
 
-  if (!baseId || !webhookId) {
+  if (!isAirtableId('base', baseId) || !isAirtableId('webhook', webhookId)) {
     logger.warn('Malformed webhook ping received.');
     return;
   }

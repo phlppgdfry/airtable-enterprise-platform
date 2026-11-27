@@ -9,6 +9,7 @@
 
 import axios, { AxiosInstance } from 'axios';
 import { AirtableRateLimiter, globalRateLimiter } from '../cli/utils/rateLimiter.js';
+import { idSegment } from './airtableIds.js';
 
 export interface AirtableFieldSchema {
   id?: string;
@@ -63,7 +64,7 @@ export class AirtableMetadataClient {
    */
   public async getBaseSchema(baseId: string): Promise<AirtableBaseSchemaResponse> {
     const response = await this.rateLimiter.execute(async () => {
-      return this.client.get(`/meta/bases/${baseId}/tables`);
+      return this.client.get(`/meta/bases/${idSegment('base', baseId)}/tables`);
     });
     return response.data;
   }
@@ -108,7 +109,7 @@ export class AirtableMetadataClient {
     }
   ): Promise<AirtableTableSchema> {
     const response = await this.rateLimiter.execute(async () => {
-      return this.client.post(`/meta/bases/${baseId}/tables`, table);
+      return this.client.post(`/meta/bases/${idSegment('base', baseId)}/tables`, table);
     });
     return response.data;
   }
@@ -122,7 +123,7 @@ export class AirtableMetadataClient {
     field: AirtableFieldSchema
   ): Promise<AirtableFieldSchema> {
     const response = await this.rateLimiter.execute(async () => {
-      return this.client.post(`/meta/bases/${baseId}/tables/${tableId}/fields`, field);
+      return this.client.post(`/meta/bases/${idSegment('base', baseId)}/tables/${idSegment('table', tableId)}/fields`, field);
     });
     return response.data;
   }
@@ -142,7 +143,7 @@ export class AirtableMetadataClient {
     macSecretConfirmation: string;
   }> {
     const response = await this.rateLimiter.execute(async () => {
-      return this.client.post(`/bases/${baseId}/webhooks`, {
+      return this.client.post(`/bases/${idSegment('base', baseId)}/webhooks`, {
         notificationUrl,
         specification,
       });
@@ -155,7 +156,7 @@ export class AirtableMetadataClient {
    */
   public async listWebhooks(baseId: string): Promise<any[]> {
     const response = await this.rateLimiter.execute(async () => {
-      return this.client.get(`/bases/${baseId}/webhooks`);
+      return this.client.get(`/bases/${idSegment('base', baseId)}/webhooks`);
     });
     return response.data.webhooks;
   }
@@ -175,7 +176,8 @@ export class AirtableMetadataClient {
   }> {
     const response = await this.rateLimiter.execute(async () => {
       return this.client.get(
-        `/bases/${baseId}/webhooks/${webhookId}/payloads?cursor=${cursor}&limit=${limit}`
+        `/bases/${idSegment('base', baseId)}/webhooks/${idSegment('webhook', webhookId)}/payloads`,
+        { params: { cursor: positiveInt(cursor, 'cursor'), limit: positiveInt(limit, 'limit') } }
       );
     });
     return response.data;
@@ -189,7 +191,7 @@ export class AirtableMetadataClient {
     webhookId: string
   ): Promise<{ expirationTime: string }> {
     const response = await this.rateLimiter.execute(async () => {
-      return this.client.post(`/bases/${baseId}/webhooks/${webhookId}/refresh`);
+      return this.client.post(`/bases/${idSegment('base', baseId)}/webhooks/${idSegment('webhook', webhookId)}/refresh`);
     });
     return response.data;
   }
@@ -199,7 +201,14 @@ export class AirtableMetadataClient {
    */
   public async deleteWebhook(baseId: string, webhookId: string): Promise<void> {
     await this.rateLimiter.execute(async () => {
-      return this.client.delete(`/bases/${baseId}/webhooks/${webhookId}`);
+      return this.client.delete(`/bases/${idSegment('base', baseId)}/webhooks/${idSegment('webhook', webhookId)}`);
     });
   }
+}
+
+function positiveInt(value: number, name: string): number {
+  if (!Number.isSafeInteger(value) || value < 1) {
+    throw new Error(`Invalid ${name}: expected a positive integer`);
+  }
+  return value;
 }
