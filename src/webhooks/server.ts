@@ -10,6 +10,7 @@
  */
 
 import express, { Request, Response } from 'express';
+import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -112,7 +113,11 @@ export function verifyAirtableSignature(req: any, secretOverride?: string): bool
 /**
  * Main Webhook Receiver Endpoint
  */
-app.post('/api/webhooks/airtable', async (req: Request, res: Response) => {
+// Airtable sends a ping per change batch; 120/min leaves headroom while capping how
+// often an unauthenticated caller can make us compute HMACs.
+const webhookLimit = rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: 'draft-7', legacyHeaders: false });
+
+app.post('/api/webhooks/airtable', webhookLimit, async (req: Request, res: Response) => {
   if (!verifyAirtableSignature(req)) {
     logger.warn('Received webhook ping with invalid HMAC signature.');
     res.status(401).json({ error: 'Invalid HMAC signature' });
